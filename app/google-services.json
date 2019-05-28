@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "831421710938",
+    "firebase_url": "https://drbed-ce81c.firebaseio.com",
+    "project_id": "drbed-ce81c",
+    "storage_bucket": "drbed-ce81c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831421710938:android:e2392014f1b1fdee",
+        "android_client_info": {
+          "package_name": "com.example.drbed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831421710938-isgoaqb4a7q21v1q489h7bfbadjnf7vh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVJHzToeE1j43wNcnjGqUe5Ub8I-YNUiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831421710938-isgoaqb4a7q21v1q489h7bfbadjnf7vh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
