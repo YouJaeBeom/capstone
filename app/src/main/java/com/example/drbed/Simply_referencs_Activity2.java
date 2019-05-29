@@ -1,10 +1,9 @@
 package com.example.drbed;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,38 +16,39 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.drbed.listviewitems.ChartItem;
-import com.example.drbed.listviewitems.LineChartItem;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.example.drbed.listviewitems.BarChartItem;
-import com.example.drbed.listviewitems.PieChartItem;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Simply_referencs_Activity2 extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
     public String ID = "";
     public String PW = "";
     public String Name = "";
     public String Phone = "";
     public String Status = "";
+    private LineChart chart;
+    Totaldata_info totaldata_info=new Totaldata_info();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,135 +74,258 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        ListView lv = findViewById(R.id.listView1);
 
-        ArrayList<ChartItem> list = new ArrayList<>();
-        // 30 items
-        for (int i = 0; i < 30; i++) {
 
-            if(i % 3 == 0) {
-                list.add(new LineChartItem(generateDataLine(i + 1), getApplicationContext()));
-            } else if(i % 3 == 1) {
-                list.add(new BarChartItem(generateDataBar(i + 1), getApplicationContext()));
-            } else if(i % 3 == 2) {
-                list.add(new PieChartItem(generateDataPie(), getApplicationContext()));
+        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 시작유");
+        new BackgroundTask().execute();
+        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 끝남유");
+
+    }
+
+
+
+
+
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            target = "http://dbwo4011.cafe24.com/DRbed/dataRequest.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL(target);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            return null;
         }
 
-        ChartDataAdapter cda = new ChartDataAdapter(getApplicationContext(), list);
-        lv.setAdapter(cda);
+        @Override
+        public void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
 
+        @Override
+        public void onPostExecute(String res) {
+            try {
+                JSONObject jsonObject = new JSONObject(res);
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
+                int count = 0;
+                while(count < jsonArray.length()){
+                    JSONObject object = jsonArray.getJSONObject(count);
+                    totaldata_info.setHRList(object.getString("HR"));
+                    totaldata_info.setRRList(object.getString("RR"));
+                    totaldata_info.setSVList(object.getString("SV"));
+                    totaldata_info.setHRVList(object.getString("HRV"));
+                    Log.e(this.getClass().getName(), "HR"+totaldata_info.getHRList(count));
+                    Log.e(this.getClass().getName(), "RR"+totaldata_info.getRRList(count));
+                    Log.e(this.getClass().getName(), "SV"+totaldata_info.getSVList(count));
+                    Log.e(this.getClass().getName(), "HRV"+totaldata_info.getHRVList(count));
+                    count++;
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            chartstart();
+        }
     }
-    /** adapter that supports 3 different item types */
-    private class ChartDataAdapter extends ArrayAdapter<ChartItem> {
 
-        ChartDataAdapter(Context context, List<ChartItem> objects) {
-            super(context, 0, objects);
-        }
+    private void chartstart() {
+        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 시작에서 딴 메소드부름");
 
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            //noinspection ConstantConditions
-            return getItem(position).getView(position, convertView, getContext());
-        }
+        chart = findViewById(R.id.chart1);
+        chart.setOnChartValueSelectedListener(this);
 
-        @Override
-        public int getItemViewType(int position) {
-            // return the views type
-            ChartItem ci = getItem(position);
-            return ci != null ? ci.getItemType() : 0;
-        }
+        // no description text
+        chart.getDescription().setEnabled(false);
 
-        @Override
-        public int getViewTypeCount() {
-            return 3; // we have 3 different item-types
-        }
+        // enable touch gestures
+        chart.setTouchEnabled(true);
+
+        chart.setDragDecelerationFrictionCoef(0.9f);
+
+        // enable scaling and dragging
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
+        chart.setHighlightPerDragEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        chart.setPinchZoom(true);
+
+        // set an alternative background color
+        chart.setBackgroundColor(Color.WHITE);
+
+
+
+        chart.animateX(1500);
+
+        // get the legend (only possible after setting data)
+        Legend l = chart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+       // l.setTypeface(tfLight);
+        l.setTextSize(11f);
+        l.setTextColor(Color.BLACK);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+//        l.setYOffset(11f);
+
+        XAxis xAxis = chart.getXAxis();
+       // xAxis.setTypeface(tfLight);
+        xAxis.setTextSize(11f);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+
+        YAxis leftAxis = chart.getAxisLeft();
+       // leftAxis.setTypeface(tfLight);
+        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        leftAxis.setAxisMaximum(200f);
+        leftAxis.setAxisMinimum(0f);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGranularityEnabled(true);
+
+        YAxis rightAxis = chart.getAxisRight();
+        //rightAxis.setTypeface(tfLight);
+        rightAxis.setTextColor(Color.RED);
+        rightAxis.setAxisMaximum(900);
+        rightAxis.setAxisMinimum(-200);
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawZeroLine(false);
+        rightAxis.setGranularityEnabled(false);
+//        guIthread=new GUIthread();
+//        guIthread.start();
+        setData(totaldata_info.getTotalLength(),200);
     }
-
-    /**
-     * generates a random ChartData object with just one DataSet
-     *
-     * @return Line data
-     */
-    private LineData generateDataLine(int cnt) {
+    private void setData(int count, float range) {
 
         ArrayList<Entry> values1 = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
-            values1.add(new Entry(i, (int) (Math.random() * 65) + 40));
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getHRList(i);
+            values1.add(new Entry(i, val));
         }
-
-        LineDataSet d1 = new LineDataSet(values1, "New DataSet " + cnt + ", (1)");
-        d1.setLineWidth(2.5f);
-        d1.setCircleRadius(4.5f);
-        d1.setHighLightColor(Color.rgb(244, 117, 117));
-        d1.setDrawValues(false);
 
         ArrayList<Entry> values2 = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
-            values2.add(new Entry(i, values1.get(i).getY() - 30));
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getRRList(i);
+            values2.add(new Entry(i, val));
         }
 
-        LineDataSet d2 = new LineDataSet(values2, "New DataSet " + cnt + ", (2)");
-        d2.setLineWidth(2.5f);
-        d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(Color.rgb(244, 117, 117));
-        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setDrawValues(false);
+        ArrayList<Entry> values3 = new ArrayList<>();
 
-        ArrayList<ILineDataSet> sets = new ArrayList<>();
-        sets.add(d1);
-        sets.add(d2);
-
-        return new LineData(sets);
-    }
-
-    /**
-     * generates a random ChartData object with just one DataSet
-     *
-     * @return Bar data
-     */
-    private BarData generateDataBar(int cnt) {
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-
-        for (int i = 0; i < 12; i++) {
-            entries.add(new BarEntry(i, (int) (Math.random() * 70) + 30));
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getSVList(i);
+            values3.add(new Entry(i, val));
         }
 
-        BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        d.setHighLightAlpha(255);
+        ArrayList<Entry> values4 = new ArrayList<>();
 
-        BarData cd = new BarData(d);
-        cd.setBarWidth(0.9f);
-        return cd;
-    }
-
-    /**
-     * generates a random ChartData object with just one DataSet
-     *
-     * @return Pie data
-     */
-    private PieData generateDataPie() {
-
-        ArrayList<PieEntry> entries = new ArrayList<>();
-
-        for (int i = 0; i < 4; i++) {
-            entries.add(new PieEntry((float) ((Math.random() * 70) + 30), "Quarter " + (i+1)));
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getHRVList(i);
+            values4.add(new Entry(i, val));
         }
 
-        PieDataSet d = new PieDataSet(entries, "");
+        LineDataSet set1, set2, set3,set4;
 
-        // space between slices
-        d.setSliceSpace(2f);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+            set3 = (LineDataSet) chart.getData().getDataSetByIndex(2);
+            set4 = (LineDataSet) chart.getData().getDataSetByIndex(3);
+            set1.setValues(values1);
+            set2.setValues(values2);
+            set3.setValues(values3);
+            set4.setValues(values4);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values1, "HR ");
 
-        return new PieData(d);
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.BLUE);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setFillAlpha(65);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setDrawCircleHole(false);
+            //set1.setFillFormatter(new MyFillFormatter(0f));
+            //set1.setDrawHorizontalHighlightIndicator(false);
+            //set1.setVisible(false);
+            //set1.setCircleHoleColor(Color.WHITE);
+
+            // create a dataset and give it a type
+            set2 = new LineDataSet(values2, "RR");
+            set2.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set2.setColor(Color.RED);
+            set2.setCircleColor(Color.RED);
+            set2.setLineWidth(2f);
+            set2.setCircleRadius(3f);
+            set2.setFillAlpha(65);
+            set2.setFillColor(Color.RED);
+            set2.setDrawCircleHole(false);
+            set2.setHighLightColor(Color.rgb(244, 117, 117));
+            //set2.setFillFormatter(new MyFillFormatter(900f));
+
+            set3 = new LineDataSet(values3, "SV");
+            set3.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set3.setColor(Color.YELLOW);
+            set3.setCircleColor(Color.YELLOW);
+            set3.setLineWidth(2f);
+            set3.setCircleRadius(3f);
+            set3.setFillAlpha(65);
+            set3.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
+            set3.setDrawCircleHole(false);
+            set3.setHighLightColor(Color.rgb(244, 117, 117));
+
+            set4 = new LineDataSet(values4, "HRV");
+            set4.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set4.setColor(Color.GREEN);
+            set4.setCircleColor(Color.GREEN);
+            set4.setLineWidth(2f);
+            set4.setCircleRadius(3f);
+            set4.setFillAlpha(65);
+            set4.setFillColor(ColorTemplate.colorWithAlpha(Color.GREEN, 200));
+            set4.setDrawCircleHole(false);
+            set4.setHighLightColor(Color.rgb(244, 117, 117));
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1, set2, set3,set4);
+            data.setValueTextColor(Color.WHITE);
+            data.setValueTextSize(9f);
+
+            // set data
+            chart.setData(data);
+        }
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -289,4 +412,13 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
     }
 
 
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
 }

@@ -9,6 +9,7 @@ public class Static_setting {
     public static String Protected_ID="";
 
     public static boolean flag;
+
     public static float sumHR;
     public static float sumRR;
     public static float sumSV;

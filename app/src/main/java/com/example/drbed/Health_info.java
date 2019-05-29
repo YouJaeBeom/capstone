@@ -3,11 +3,12 @@ package com.example.drbed;
 public class Health_info {
         String Time;
         float HR;
-    float RR;
-    float SV;
-    float HRV;
-    float Signal_Strength;
-    float Status ;
+        float RR;
+        float SV;
+        float HRV;
+        float Signal_Strength;
+        float Status ;
+
     public String getTime() {
         return Time;
     }

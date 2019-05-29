@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
     private LineChart chart;
     private Thread thread;
-    private Health_info health_info=new Health_info();
     private GUIthread guIthread;
+    private Health_info health_info=new Health_info();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
