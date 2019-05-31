@@ -9,29 +9,29 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="Mian" />
         <item
-            android:id="@+id/nav_Check_real_time_status"
+            android:id="@+id/nav_sleep_report_previous"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Check real-time status" />
+            android:title="Sleep report (Previous day)" />
         <item
-            android:id="@+id/nav_Check_sleep_quality"
+            android:id="@+id/nav_sleep_report_week"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Check sleep quality" />
+            android:title="Sleep report (Week)" />
         <item
-            android:id="@+id/nav_simply_references"
+            android:id="@+id/nav_check_ward"
             android:icon="@drawable/ic_menu_manage"
-            android:title="simply_references" />
+            android:title="Check ward" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Setting">
         <menu>
             <item
-                android:id="@+id/nav_Changing_information"
+                android:id="@+id/nav_body_information_settings"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Changing information" />
+                android:title="body information settings" />
             <item
-                android:id="@+id/nav_setting"
+                android:id="@+id/nav_guardian_ward_setting"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Setting" />
+                android:title="Guardian-Ward Setting" />
         </menu>
     </item>
 

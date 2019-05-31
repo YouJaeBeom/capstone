@@ -100,32 +100,42 @@ public class Changing_info_Activity extends AppCompatActivity
             Log.e(this.getClass().getName(), "nav_Check_real_time_status!");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_Check_real_time_status) {
-            /* 현상태 스트리밍 메뉴 */
-            Log.e(this.getClass().getName(), "nav_Check_real_time_status!");
-            Intent intent = new Intent(this, ServerSetActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_Check_sleep_quality) {
-            /* 수면의 질확인 메뉴*/
-            Intent intent = new Intent(this, Check_sleep_quality_Activity.class);
+        } else if (id == R.id.nav_sleep_report_previous) {
+            /* 전날 리포트 */
 
-            startActivity(intent);
-        } else if (id == R.id.nav_simply_references) {
-            /* 간단한 소견서 */
+            // thread.interrupt();
             Intent intent = new Intent(this, Simply_referencs_Activity2.class);
             startActivity(intent);
-        } else if (id == R.id.nav_Changing_information) {
-            /* 정보 수정 */
-            Intent intent = new Intent(this, Changing_info_Activity.class);
+        } else if (id == R.id.nav_sleep_report_week) {
+            /* 주간 리포트*/
+
+            // thread.interrupt();
+            Intent intent = new Intent(this, Check_sleep_quality_Activity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_setting) {
-            /* 부가 세팅 */
+        } else if (id == R.id.nav_check_ward) {
+            /* ward check */
+
+            //thread.interrupt();
+            Intent intent = new Intent(this, StatusCheckActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_body_information_settings) {
+            /* 신체정보세팅  */
+
+            // thread.interrupt();
             Intent intent = new Intent(this, UserSettingActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_guardian_ward_setting) {
+            /* 부가 세팅 */
+
+            Intent intent = new Intent(this, Changing_info_Activity.class);
             startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        /* nav_header에서 간병인 이름 환자이름 */
+
         return true;
     }
 }

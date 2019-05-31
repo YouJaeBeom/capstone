@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -34,11 +35,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Simply_referencs_Activity2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
@@ -47,7 +53,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
     public String Name = "";
     public String Phone = "";
     public String Status = "";
-    private LineChart chart;
+    private LineChart chartHR,chartRR,chartSV,chartHRV,chart;
     Totaldata_info totaldata_info=new Totaldata_info();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +83,15 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
 
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 시작유");
-        new BackgroundTask().execute();
+         /*
+        start = 취침 지점
+        end = 기상 시점
+        구하는 코드 추가 필요
+         */
+        new BackgroundTask().execute("2019-05-30 07:30:00","2019-05-30 12:00:00");
+
+
+
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 끝남유");
 
     }
@@ -86,19 +100,32 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
 
 
-    class BackgroundTask extends AsyncTask<Void, Void, String> {
+    class BackgroundTask extends AsyncTask<String, Void, String> {
         String target;
+
+
 
         @Override
         protected void onPreExecute() {
             target = "http://dbwo4011.cafe24.com/DRbed/dataRequest.php";
-        }
 
+        }
+        String sendMsg;
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... params) {
             try {
+                String start=params[0];
+                String end = params[1];
+                String data = URLEncoder.encode("start","UTF-8")+"="+URLEncoder.encode(start,"UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
+                data+= "&"+URLEncoder.encode("end","UTF-8")+"="+URLEncoder.encode(end,"UTF-8");
                 URL url = new URL(target);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST"); //post방식으로
+                httpURLConnection.setDoInput(true); // server와 통신에서 입력가능상태로 설정
+                httpURLConnection.setDoOutput(true);//server와의 통신에서 출력 가능한 상태로
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로
+                wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
+                wr.flush();//flush!
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String temp;
@@ -150,118 +177,178 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
     private void chartstart() {
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 시작에서 딴 메소드부름");
 
-        chart = findViewById(R.id.chart1);
-        chart.setOnChartValueSelectedListener(this);
+        chartHR = findViewById(R.id.chart1);
+        chartRR = findViewById(R.id.chart2);
+        chartSV = findViewById(R.id.chart3);
+        chartHRV = findViewById(R.id.chart4);
 
-        // no description text
-        chart.getDescription().setEnabled(false);
+        chartHR.setOnChartValueSelectedListener(this);
+        chartRR.setOnChartValueSelectedListener(this);
+        chartSV.setOnChartValueSelectedListener(this);
+        chartHRV.setOnChartValueSelectedListener(this);
 
+        // enable description text
+        chartHR.getDescription().setEnabled(true);
+        chartRR.getDescription().setEnabled(true);
+        chartSV.getDescription().setEnabled(true);
+        chartHRV.getDescription().setEnabled(true);
         // enable touch gestures
-        chart.setTouchEnabled(true);
+        chartHR.setTouchEnabled(true);
+        chartRR.setTouchEnabled(true);
+        chartSV.setTouchEnabled(true);
+        chartHRV.setTouchEnabled(true);
 
-        chart.setDragDecelerationFrictionCoef(0.9f);
 
         // enable scaling and dragging
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
-        chart.setDrawGridBackground(false);
-        chart.setHighlightPerDragEnabled(true);
+        chartHR.setDragEnabled(true);
+        chartHR.setScaleEnabled(true);
+        chartHR.setDrawGridBackground(false);
+        chartRR.setDragEnabled(true);
+        chartRR.setScaleEnabled(true);
+        chartRR.setDrawGridBackground(false);
+        chartSV.setDragEnabled(true);
+        chartSV.setScaleEnabled(true);
+        chartSV.setDrawGridBackground(false);
+        chartHRV.setDragEnabled(true);
+        chartHRV.setScaleEnabled(true);
+        chartHRV.setDrawGridBackground(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(true);
+        chartHR.setPinchZoom(true);
 
         // set an alternative background color
-        chart.setBackgroundColor(Color.WHITE);
+        chartHR.setBackgroundColor(Color.LTGRAY);
 
+        LineData data = new LineData();
+        data.setValueTextColor(Color.WHITE);
 
-
-        chart.animateX(1500);
+        // add empty data
+        chartHR.setData(data);
 
         // get the legend (only possible after setting data)
-        Legend l = chart.getLegend();
+        Legend l = chartHR.getLegend();
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
-       // l.setTypeface(tfLight);
-        l.setTextSize(11f);
-        l.setTextColor(Color.BLACK);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-//        l.setYOffset(11f);
+        //l.setTypeface(tfLight);
+        l.setTextColor(Color.WHITE);
 
-        XAxis xAxis = chart.getXAxis();
-       // xAxis.setTypeface(tfLight);
-        xAxis.setTextSize(11f);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.setDrawGridLines(false);
-        xAxis.setDrawAxisLine(false);
+        XAxis xl = chartHR.getXAxis();
+        //xl.setTypeface(tfLight);
+        xl.setTextColor(Color.WHITE);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+        xl.setEnabled(true);
 
-        YAxis leftAxis = chart.getAxisLeft();
-       // leftAxis.setTypeface(tfLight);
-        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        leftAxis.setAxisMaximum(200f);
+        YAxis leftAxis = chartHR.getAxisLeft();
+        //leftAxis.setTypeface(tfLight);
+        leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setAxisMaximum(100f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(true);
 
-        YAxis rightAxis = chart.getAxisRight();
-        //rightAxis.setTypeface(tfLight);
-        rightAxis.setTextColor(Color.RED);
-        rightAxis.setAxisMaximum(900);
-        rightAxis.setAxisMinimum(-200);
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawZeroLine(false);
-        rightAxis.setGranularityEnabled(false);
-//        guIthread=new GUIthread();
-//        guIthread.start();
-        setData(totaldata_info.getTotalLength(),200);
+        YAxis rightAxis = chartHR.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        for(int i=0;i<totaldata_info.getTotalLength();i++) {
+            setHRData(i, 200);
+        }
+        //setRRData(totaldata_info.getTotalLength(),200);
+        //setSVData(totaldata_info.getTotalLength(),200);
+        //setHRVData(totaldata_info.getTotalLength(),200);
     }
-    private void setData(int count, float range) {
 
-        ArrayList<Entry> values1 = new ArrayList<>();
+    private LineDataSet createSet() {
 
+        LineDataSet set = new LineDataSet(null, "Dynamic Data");
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(Color.WHITE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(4f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(9f);
+        set.setDrawValues(false);
+        return set;
+    }
+
+    private void setHRData(int count, float range) {
+
+        LineData data = chart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+
+                data.addEntry(new Entry(set.getEntryCount(), totaldata_info.getHRList(count)), 0);
+
+            data.notifyDataChanged();
+
+            // let the chart know it's data has changed
+            chart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            chart.setVisibleXRangeMaximum(120);
+            // chart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            chart.moveViewToX(data.getEntryCount());
+
+            // this automatically refreshes the chart (calls invalidate())
+            // chart.moveViewTo(data.getXValCount()-7, 55f,
+            // AxisDependency.LEFT);
+        }
+        /*ArrayList<Entry> values1 = new ArrayList<>();
+
+        // chart.setVisibleYRange(30, AxisDependency.LEFT);
+
+        // move to the latest entry
+
+        float sum=0;
+        float[] hr=new float[count];
         for (int i = 0; i < count; i++) {
             float val = totaldata_info.getHRList(i);
+            hr[i]=val;
+            sum+=val;
             values1.add(new Entry(i, val));
+
         }
 
-        ArrayList<Entry> values2 = new ArrayList<>();
+        float AVG_HR=sum/count;
+        Arrays.sort(hr);
+        TextView textView1=(TextView) findViewById(R.id.max_min_hr);
+        textView1.setText(String.valueOf(hr[0])+"//"+String.valueOf(hr[count-1]));
+        TextView textView=(TextView) findViewById(R.id.avg_hr);
+        textView.setText(String.valueOf(AVG_HR));
 
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getRRList(i);
-            values2.add(new Entry(i, val));
-        }
-
-        ArrayList<Entry> values3 = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getSVList(i);
-            values3.add(new Entry(i, val));
-        }
-
-        ArrayList<Entry> values4 = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getHRVList(i);
-            values4.add(new Entry(i, val));
-        }
 
         LineDataSet set1, set2, set3,set4;
 
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-            set3 = (LineDataSet) chart.getData().getDataSetByIndex(2);
-            set4 = (LineDataSet) chart.getData().getDataSetByIndex(3);
+        if (chartHR.getData() != null &&
+                chartHR.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chartHR.getData().getDataSetByIndex(0);
             set1.setValues(values1);
-            set2.setValues(values2);
-            set3.setValues(values3);
-            set4.setValues(values4);
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
+
+            chartHR.getData().notifyDataChanged();
+            chartHR.notifyDataSetChanged();
+
+
+            // limit the number of visible entries
+            chartHR.setVisibleXRangeMaximum(120);
+            // chart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            chartHR.moveViewToX( chartHR.getData().getEntryCount());
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(values1, "HR ");
@@ -269,6 +356,64 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setColor(ColorTemplate.getHoloBlue());
             set1.setCircleColor(Color.BLUE);
+            set1.setColor(Color.BLUE);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setFillAlpha(65);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setDrawCircleHole(false);
+            //set1.setFillFormatter(new MyFillFormatter(0f));
+            //set1.setDrawHorizontalHighlightIndicator(false);
+            //set1.setVisible(false);
+            //set1.setCircleHoleColor(Color.WHITE);
+
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1);
+            data.setValueTextColor(Color.WHITE);
+            data.setValueTextSize(9f);
+
+            // set data
+            chartHR.setData(data);
+        }*/
+    }
+
+    private void setRRData(int count, float range) {
+
+        ArrayList<Entry> values1 = new ArrayList<>();
+        float sum = 0;
+        float[] rr=new float[count];
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getRRList(i);
+            sum+=val;
+            rr[i]=val;
+            values1.add(new Entry(i, val));
+        }
+        float AVG_RR=sum/count;
+        Arrays.sort(rr);
+        TextView textView1=(TextView) findViewById(R.id.max_min_rr);
+        textView1.setText(String.valueOf(rr[0])+"//"+String.valueOf(rr[count-1]));
+        TextView textView=(TextView) findViewById(R.id.avg_rr);
+        textView.setText(String.valueOf(AVG_RR));
+        LineDataSet set1;
+
+        if (chartRR.getData() != null &&
+                chartRR.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chartRR.getData().getDataSetByIndex(0);
+
+            set1.setValues(values1);
+
+            chartRR.getData().notifyDataChanged();
+            chartRR.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values1, "RR ");
+
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.YELLOW);
+            set1.setColor(Color.YELLOW);
             set1.setLineWidth(2f);
             set1.setCircleRadius(3f);
             set1.setFillAlpha(65);
@@ -281,47 +426,131 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             //set1.setCircleHoleColor(Color.WHITE);
 
             // create a dataset and give it a type
-            set2 = new LineDataSet(values2, "RR");
-            set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set2.setColor(Color.RED);
-            set2.setCircleColor(Color.RED);
-            set2.setLineWidth(2f);
-            set2.setCircleRadius(3f);
-            set2.setFillAlpha(65);
-            set2.setFillColor(Color.RED);
-            set2.setDrawCircleHole(false);
-            set2.setHighLightColor(Color.rgb(244, 117, 117));
-            //set2.setFillFormatter(new MyFillFormatter(900f));
-
-            set3 = new LineDataSet(values3, "SV");
-            set3.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set3.setColor(Color.YELLOW);
-            set3.setCircleColor(Color.YELLOW);
-            set3.setLineWidth(2f);
-            set3.setCircleRadius(3f);
-            set3.setFillAlpha(65);
-            set3.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
-            set3.setDrawCircleHole(false);
-            set3.setHighLightColor(Color.rgb(244, 117, 117));
-
-            set4 = new LineDataSet(values4, "HRV");
-            set4.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set4.setColor(Color.GREEN);
-            set4.setCircleColor(Color.GREEN);
-            set4.setLineWidth(2f);
-            set4.setCircleRadius(3f);
-            set4.setFillAlpha(65);
-            set4.setFillColor(ColorTemplate.colorWithAlpha(Color.GREEN, 200));
-            set4.setDrawCircleHole(false);
-            set4.setHighLightColor(Color.rgb(244, 117, 117));
 
             // create a data object with the data sets
-            LineData data = new LineData(set1, set2, set3,set4);
+            LineData data = new LineData(set1);
+            data.setValueTextColor(Color.YELLOW);
+            data.setValueTextSize(9f);
+
+            // set data
+            chartRR.setData(data);
+        }
+    }
+
+    private void setSVData(int count, float range) {
+
+        ArrayList<Entry> values1 = new ArrayList<>();
+
+        float sum=0;
+        float[] sv=new float[count];
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getSVList(i);
+            sum+=val;
+            sv[i]=val;
+            values1.add(new Entry(i, val));
+        }
+        float AVG_SV=sum/count;
+        Arrays.sort(sv);
+        TextView textView1=(TextView) findViewById(R.id.max_min_sv);
+        textView1.setText(String.valueOf(sv[0])+"//"+String.valueOf(sv[count-1]));
+        TextView textView=(TextView) findViewById(R.id.avg_sv);
+        textView.setText(String.valueOf(AVG_SV));
+
+
+        LineDataSet set1, set2, set3,set4;
+
+        if (chartSV.getData() != null &&
+                chartSV.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chartSV.getData().getDataSetByIndex(0);
+
+            set1.setValues(values1);
+            chartSV.getData().notifyDataChanged();
+            chartSV.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values1, "SV ");
+
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.RED);
+            set1.setColor(Color.RED);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setFillAlpha(65);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setDrawCircleHole(false);
+            //set1.setFillFormatter(new MyFillFormatter(0f));
+            //set1.setDrawHorizontalHighlightIndicator(false);
+            //set1.setVisible(false);
+            //set1.setCircleHoleColor(Color.WHITE);
+
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1);
             data.setValueTextColor(Color.WHITE);
             data.setValueTextSize(9f);
 
             // set data
-            chart.setData(data);
+            chartSV.setData(data);
+        }
+    }
+
+    private void setHRVData(int count, float range) {
+
+        ArrayList<Entry> values1 = new ArrayList<>();
+        float sum=0;
+        float[] hrv=new float[count];
+        for (int i = 0; i < count; i++) {
+            float val = totaldata_info.getHRVList(i);
+            sum+=val;
+            hrv[i]=val;
+            values1.add(new Entry(i, val));
+        }
+        float AVG_HRV=sum/count;
+        Arrays.sort(hrv);
+        TextView textView1=(TextView) findViewById(R.id.max_min_hrv);
+        textView1.setText(String.valueOf(hrv[0])+"//"+String.valueOf(hrv[count-1]));
+        TextView textView=(TextView) findViewById(R.id.avg_hrv);
+        textView.setText(String.valueOf(AVG_HRV));
+
+        LineDataSet set1, set2, set3,set4;
+
+        if (chartHRV.getData() != null &&
+                chartHRV.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chartHRV.getData().getDataSetByIndex(0);
+
+            set1.setValues(values1);
+
+            chartHRV.getData().notifyDataChanged();
+            chartHRV.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values1, "HRV ");
+
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.GREEN);
+            set1.setColor(Color.GREEN);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setFillAlpha(65);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setDrawCircleHole(false);
+            //set1.setFillFormatter(new MyFillFormatter(0f));
+            //set1.setDrawHorizontalHighlightIndicator(false);
+            //set1.setVisible(false);
+            //set1.setCircleHoleColor(Color.WHITE);
+
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1);
+            data.setValueTextColor(Color.WHITE);
+            data.setValueTextSize(9f);
+
+            // set data
+            chartHRV.setData(data);
         }
     }
 
@@ -373,33 +602,39 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@!"+id);
-
         if (id == R.id.nav_Main) {
             // Handle the camera action
-            Log.e(this.getClass().getName(), "nav_Main!");
+            Log.e(this.getClass().getName(), "nav_Check_real_time_status!");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_Check_real_time_status) {
-            /* 현상태 스트리밍 메뉴 */
-            Log.e(this.getClass().getName(), "nav_Check_real_time_status!");
-            Intent intent = new Intent(this, ServerSetActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_Check_sleep_quality) {
-            /* 수면의 질확인 메뉴*/
-            Intent intent = new Intent(this, Check_sleep_quality_Activity.class);
+        } else if (id == R.id.nav_sleep_report_previous) {
+            /* 전날 리포트 */
 
-            startActivity(intent);
-        } else if (id == R.id.nav_simply_references) {
-            /* 간단한 소견서 */
+            // thread.interrupt();
             Intent intent = new Intent(this, Simply_referencs_Activity2.class);
             startActivity(intent);
-        } else if (id == R.id.nav_Changing_information) {
-            /* 정보 수정 */
-            Intent intent = new Intent(this, Changing_info_Activity.class);
+        } else if (id == R.id.nav_sleep_report_week) {
+            /* 주간 리포트*/
+
+            // thread.interrupt();
+            Intent intent = new Intent(this, Check_sleep_quality_Activity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_setting) {
-            /* 부가 세팅 */
+        } else if (id == R.id.nav_check_ward) {
+            /* ward check */
+
+            //thread.interrupt();
+            Intent intent = new Intent(this, StatusCheckActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_body_information_settings) {
+            /* 신체정보세팅  */
+
+            // thread.interrupt();
             Intent intent = new Intent(this, UserSettingActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_guardian_ward_setting) {
+            /* 부가 세팅 */
+
+            Intent intent = new Intent(this, Changing_info_Activity.class);
             startActivity(intent);
         }
 
