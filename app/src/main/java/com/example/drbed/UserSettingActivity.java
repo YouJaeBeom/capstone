@@ -169,13 +169,13 @@ public class UserSettingActivity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar=Calendar.getInstance();
 
         calendar.setTime(date);
         calendar.add(Calendar.SECOND,-1);
 
-        String time=df.format(calendar.getTime());
+        final String time=df.format(calendar.getTime());
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -186,7 +186,7 @@ public class UserSettingActivity extends AppCompatActivity
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
                     Log.e(this.getClass().getName(), "success!" + success);
-
+                    Log.e(this.getClass().getName(), "time "+ time);
                     if (success) {
                         Log.e(this.getClass().getName(), "성공함!");
                         Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);

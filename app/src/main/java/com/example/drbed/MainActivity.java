@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
 
             long now = System.currentTimeMillis();
             Date date = new Date(now);
-            DateFormat df =new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Calendar calendar=Calendar.getInstance();
 
             calendar.setTime(date);

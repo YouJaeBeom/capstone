@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +20,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -35,26 +39,33 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Simply_referencs_Activity2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
-    public String ID = "";
+
     public String PW = "";
     public String Name = "";
     public String Phone = "";
-    public String Status = "";
-    private LineChart chartHR,chartRR,chartSV,chartHRV,chart;
-    Totaldata_info totaldata_info=new Totaldata_info();
+    //public String Status = "";
+    private LineChart chart;
+    public String ID1 = "";
+    public String ID2 = "";
+    String stop_time="";
+    String start_time="";
+
+    String Status1="";
+    String Status2="";
+    SleepStep sleepStep=new SleepStep();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,17 +99,215 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         end = 기상 시점
         구하는 코드 추가 필요
          */
-        new BackgroundTask().execute("2019-05-30 07:30:00","2019-05-30 12:00:00");
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar=Calendar.getInstance();
+
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND,-1);
+
+        String getTime=df.format(calendar.getTime());
+        //String start_time=Check_sleep_start_Time(getTime);
+        if(Static_setting.Status.contains("Guardian"))
+        {
+           Check_sleep_start_Time(Static_setting.Protected_ID,getTime);
+
+        }
+        else if(Static_setting.Status.contains("Ward"))
+        {
+            Check_sleep_start_Time(Static_setting.ID,getTime);
+
+        }
+
+//        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+start_time);
+//        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+stop_time);
+//        Log.e(this.getClass().getName(), "Start_time"+start_time);
+//        Log.e(this.getClass().getName(), "stop_time"+stop_time);
+
+       // new BackgroundTask().execute(Static_setting.ID,getTime);
 
 
 
-        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 끝남유");
+       // Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 끝남유");
 
     }
 
+    private void Check_sleep_stop_Time(String ID,String Time) {
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    Log.e(this.getClass().getName(), "success!" + success);
+
+                    if (success) {
+                        Log.e(this.getClass().getName(), "성공함!");
+                        Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
+                         ID1 =jsonResponse.getString("ID");
+                         stop_time =jsonResponse.getString("Time");
+                         Status1 =jsonResponse.getString("Status");
+                            //Log.e(this.getClass().getName(), "Start_time"+start_time);
+
+                            startSleepQulity();
 
 
 
+                    } else {
+                        Log.e(this.getClass().getName(), "Dataset fail");
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Simply_referencs_Activity2.this);
+                        builder.setMessage("기상하지 않아 확인이 어렵습니다.")
+                                .setNegativeButton("확인", null)
+                                .create()
+                                .show();
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Sleep_stop_Time_Request sleep_stop_time_request = new Sleep_stop_Time_Request(ID, Time, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
+        queue.add(sleep_stop_time_request);
+
+    }
+
+    private void startSleepQulity() {
+        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@");
+        Log.e(this.getClass().getName(), "stop_time"+stop_time);
+        Log.e(this.getClass().getName(), "Start_time"+start_time);
+    }
+
+
+    private void Check_sleep_start_Time(final String ID, final String Time) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    Log.e(this.getClass().getName(), "success!" + success);
+
+                    if (success) {
+
+                        Log.e(this.getClass().getName(), "Check_sleep_start_Time!" + jsonResponse);
+                        ID2 =jsonResponse.getString("ID");
+                        start_time =jsonResponse.getString("Time");
+                        Status2 =jsonResponse.getString("Status");
+                        Log.e(this.getClass().getName(), "오늘날짜에 취침시간이 판단됨");
+                        Log.e(this.getClass().getName(), "Start_time"+start_time);
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+
+                        calendar.setTime(date);
+                        calendar.add(Calendar.SECOND,-1);
+
+                        String getTime=df.format(calendar.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_stop_Time(Static_setting.Protected_ID,getTime);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+
+                            Check_sleep_stop_Time(Static_setting.ID,getTime);
+                        }
+
+                    } else {
+                        Log.e(this.getClass().getName(), "오늘날짜에 취침시간이 판단이 안됨 전날으로 넘어감");
+                        Check_sleep_start_Time_before(ID,Time);
+
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
+        Sleep_start_Time_Request sleep_start_time_request = new Sleep_start_Time_Request(ID, Time, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
+        queue.add(sleep_start_time_request);
+
+    }
+
+    private void Check_sleep_start_Time_before(String ID,String Time) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    Log.e(this.getClass().getName(), "success!" + success);
+
+                    if (success) {
+
+                        Log.e(this.getClass().getName(), "Check_sleep_start_Time_before!" + jsonResponse);
+                        ID2 =jsonResponse.getString("ID");
+                        start_time =jsonResponse.getString("Time");
+                        Status2 =jsonResponse.getString("Status");
+                        Log.e(this.getClass().getName(), "전날날짜에 취침시간이 판단됨");
+                        Log.e(this.getClass().getName(), "Start_time"+start_time);
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+
+                        calendar.setTime(date);
+                        calendar.add(Calendar.SECOND,-1);
+
+                        String getTime=df.format(calendar.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_stop_Time(Static_setting.Protected_ID,getTime);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+
+                            Check_sleep_stop_Time(Static_setting.ID,getTime);
+                        }
+
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Simply_referencs_Activity2.this);
+                        builder.setMessage("실패 시발")
+                                .setNegativeButton("확인", null)
+                                .create()
+                                .show();
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
+        Sleep_start_Time_before_Request sleep_start_time_before_request = new Sleep_start_Time_before_Request(ID, Time, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
+        queue.add(sleep_start_time_before_request);
+
+    }
 
     class BackgroundTask extends AsyncTask<String, Void, String> {
         String target;
@@ -114,10 +323,10 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         @Override
         protected String doInBackground(String... params) {
             try {
-                String start=params[0];
-                String end = params[1];
-                String data = URLEncoder.encode("start","UTF-8")+"="+URLEncoder.encode(start,"UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
-                data+= "&"+URLEncoder.encode("end","UTF-8")+"="+URLEncoder.encode(end,"UTF-8");
+                String ID=params[0];
+                String Time = params[1];
+                String data = URLEncoder.encode("ID","UTF-8")+"="+URLEncoder.encode(ID,"UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
+                data+= "&"+URLEncoder.encode("Time","UTF-8")+"="+URLEncoder.encode(Time,"UTF-8");
                 URL url = new URL(target);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST"); //post방식으로
@@ -157,14 +366,14 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
                 int count = 0;
                 while(count < jsonArray.length()){
                     JSONObject object = jsonArray.getJSONObject(count);
-                    totaldata_info.setHRList(object.getString("HR"));
-                    totaldata_info.setRRList(object.getString("RR"));
-                    totaldata_info.setSVList(object.getString("SV"));
-                    totaldata_info.setHRVList(object.getString("HRV"));
-                    Log.e(this.getClass().getName(), "HR"+totaldata_info.getHRList(count));
-                    Log.e(this.getClass().getName(), "RR"+totaldata_info.getRRList(count));
-                    Log.e(this.getClass().getName(), "SV"+totaldata_info.getSVList(count));
-                    Log.e(this.getClass().getName(), "HRV"+totaldata_info.getHRVList(count));
+                    sleepStep.setIDList(object.getString("ID"));
+                    sleepStep.setTimeList(object.getString("Time"));
+                    sleepStep.setSleep_stepList(object.getString("Sleep_step"));
+
+                    Log.e(this.getClass().getName(), "HR"+sleepStep.getIDList(count));
+                    Log.e(this.getClass().getName(), "RR"+sleepStep.getTimeList(count));
+                    Log.e(this.getClass().getName(), "SV"+sleepStep.getSleep_stepList(count));
+
                     count++;
                 }
             } catch (Exception e){
@@ -177,80 +386,56 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
     private void chartstart() {
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 시작에서 딴 메소드부름");
 
-        chartHR = findViewById(R.id.chart1);
-        chartRR = findViewById(R.id.chart2);
-        chartSV = findViewById(R.id.chart3);
-        chartHRV = findViewById(R.id.chart4);
-
-        chartHR.setOnChartValueSelectedListener(this);
-        chartRR.setOnChartValueSelectedListener(this);
-        chartSV.setOnChartValueSelectedListener(this);
-        chartHRV.setOnChartValueSelectedListener(this);
-
+        chart = findViewById(R.id.chart1);
+        chart.setOnChartValueSelectedListener(this);
         // enable description text
-        chartHR.getDescription().setEnabled(true);
-        chartRR.getDescription().setEnabled(true);
-        chartSV.getDescription().setEnabled(true);
-        chartHRV.getDescription().setEnabled(true);
+        chart.getDescription().setEnabled(true);
         // enable touch gestures
-        chartHR.setTouchEnabled(true);
-        chartRR.setTouchEnabled(true);
-        chartSV.setTouchEnabled(true);
-        chartHRV.setTouchEnabled(true);
-
+        chart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        chartHR.setDragEnabled(true);
-        chartHR.setScaleEnabled(true);
-        chartHR.setDrawGridBackground(false);
-        chartRR.setDragEnabled(true);
-        chartRR.setScaleEnabled(true);
-        chartRR.setDrawGridBackground(false);
-        chartSV.setDragEnabled(true);
-        chartSV.setScaleEnabled(true);
-        chartSV.setDrawGridBackground(false);
-        chartHRV.setDragEnabled(true);
-        chartHRV.setScaleEnabled(true);
-        chartHRV.setDrawGridBackground(false);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chartHR.setPinchZoom(true);
+        chart.setPinchZoom(true);
 
         // set an alternative background color
-        chartHR.setBackgroundColor(Color.LTGRAY);
+        chart.setBackgroundColor(Color.LTGRAY);
 
         LineData data = new LineData();
         data.setValueTextColor(Color.WHITE);
 
         // add empty data
-        chartHR.setData(data);
+        chart.setData(data);
 
         // get the legend (only possible after setting data)
-        Legend l = chartHR.getLegend();
+        Legend l = chart.getLegend();
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         //l.setTypeface(tfLight);
         l.setTextColor(Color.WHITE);
 
-        XAxis xl = chartHR.getXAxis();
+        XAxis xl = chart.getXAxis();
         //xl.setTypeface(tfLight);
         xl.setTextColor(Color.WHITE);
         xl.setDrawGridLines(false);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
 
-        YAxis leftAxis = chartHR.getAxisLeft();
+        YAxis leftAxis = chart.getAxisLeft();
         //leftAxis.setTypeface(tfLight);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setAxisMaximum(100f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
 
-        YAxis rightAxis = chartHR.getAxisRight();
+        YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        for(int i=0;i<totaldata_info.getTotalLength();i++) {
+        for(int i=0;i<sleepStep.getTotalLength();i++) {
             setHRData(i, 200);
         }
         //setRRData(totaldata_info.getTotalLength(),200);
@@ -290,7 +475,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             }
 
 
-                data.addEntry(new Entry(set.getEntryCount(), totaldata_info.getHRList(count)), 0);
+               // data.addEntry(new Entry(set.getEntryCount(), totaldata_info.getHRList(count)), 0);
 
             data.notifyDataChanged();
 
@@ -308,251 +493,9 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             // chart.moveViewTo(data.getXValCount()-7, 55f,
             // AxisDependency.LEFT);
         }
-        /*ArrayList<Entry> values1 = new ArrayList<>();
 
-        // chart.setVisibleYRange(30, AxisDependency.LEFT);
-
-        // move to the latest entry
-
-        float sum=0;
-        float[] hr=new float[count];
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getHRList(i);
-            hr[i]=val;
-            sum+=val;
-            values1.add(new Entry(i, val));
-
-        }
-
-        float AVG_HR=sum/count;
-        Arrays.sort(hr);
-        TextView textView1=(TextView) findViewById(R.id.max_min_hr);
-        textView1.setText(String.valueOf(hr[0])+"//"+String.valueOf(hr[count-1]));
-        TextView textView=(TextView) findViewById(R.id.avg_hr);
-        textView.setText(String.valueOf(AVG_HR));
-
-
-        LineDataSet set1, set2, set3,set4;
-
-        if (chartHR.getData() != null &&
-                chartHR.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chartHR.getData().getDataSetByIndex(0);
-            set1.setValues(values1);
-
-            chartHR.getData().notifyDataChanged();
-            chartHR.notifyDataSetChanged();
-
-
-            // limit the number of visible entries
-            chartHR.setVisibleXRangeMaximum(120);
-            // chart.setVisibleYRange(30, AxisDependency.LEFT);
-
-            // move to the latest entry
-            chartHR.moveViewToX( chartHR.getData().getEntryCount());
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values1, "HR ");
-
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.BLUE);
-            set1.setColor(Color.BLUE);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
-            set1.setDrawCircleHole(false);
-            //set1.setFillFormatter(new MyFillFormatter(0f));
-            //set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setVisible(false);
-            //set1.setCircleHoleColor(Color.WHITE);
-
-
-            // create a data object with the data sets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.WHITE);
-            data.setValueTextSize(9f);
-
-            // set data
-            chartHR.setData(data);
-        }*/
     }
 
-    private void setRRData(int count, float range) {
-
-        ArrayList<Entry> values1 = new ArrayList<>();
-        float sum = 0;
-        float[] rr=new float[count];
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getRRList(i);
-            sum+=val;
-            rr[i]=val;
-            values1.add(new Entry(i, val));
-        }
-        float AVG_RR=sum/count;
-        Arrays.sort(rr);
-        TextView textView1=(TextView) findViewById(R.id.max_min_rr);
-        textView1.setText(String.valueOf(rr[0])+"//"+String.valueOf(rr[count-1]));
-        TextView textView=(TextView) findViewById(R.id.avg_rr);
-        textView.setText(String.valueOf(AVG_RR));
-        LineDataSet set1;
-
-        if (chartRR.getData() != null &&
-                chartRR.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chartRR.getData().getDataSetByIndex(0);
-
-            set1.setValues(values1);
-
-            chartRR.getData().notifyDataChanged();
-            chartRR.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values1, "RR ");
-
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.YELLOW);
-            set1.setColor(Color.YELLOW);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
-            set1.setDrawCircleHole(false);
-            //set1.setFillFormatter(new MyFillFormatter(0f));
-            //set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setVisible(false);
-            //set1.setCircleHoleColor(Color.WHITE);
-
-            // create a dataset and give it a type
-
-            // create a data object with the data sets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.YELLOW);
-            data.setValueTextSize(9f);
-
-            // set data
-            chartRR.setData(data);
-        }
-    }
-
-    private void setSVData(int count, float range) {
-
-        ArrayList<Entry> values1 = new ArrayList<>();
-
-        float sum=0;
-        float[] sv=new float[count];
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getSVList(i);
-            sum+=val;
-            sv[i]=val;
-            values1.add(new Entry(i, val));
-        }
-        float AVG_SV=sum/count;
-        Arrays.sort(sv);
-        TextView textView1=(TextView) findViewById(R.id.max_min_sv);
-        textView1.setText(String.valueOf(sv[0])+"//"+String.valueOf(sv[count-1]));
-        TextView textView=(TextView) findViewById(R.id.avg_sv);
-        textView.setText(String.valueOf(AVG_SV));
-
-
-        LineDataSet set1, set2, set3,set4;
-
-        if (chartSV.getData() != null &&
-                chartSV.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chartSV.getData().getDataSetByIndex(0);
-
-            set1.setValues(values1);
-            chartSV.getData().notifyDataChanged();
-            chartSV.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values1, "SV ");
-
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.RED);
-            set1.setColor(Color.RED);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
-            set1.setDrawCircleHole(false);
-            //set1.setFillFormatter(new MyFillFormatter(0f));
-            //set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setVisible(false);
-            //set1.setCircleHoleColor(Color.WHITE);
-
-
-            // create a data object with the data sets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.WHITE);
-            data.setValueTextSize(9f);
-
-            // set data
-            chartSV.setData(data);
-        }
-    }
-
-    private void setHRVData(int count, float range) {
-
-        ArrayList<Entry> values1 = new ArrayList<>();
-        float sum=0;
-        float[] hrv=new float[count];
-        for (int i = 0; i < count; i++) {
-            float val = totaldata_info.getHRVList(i);
-            sum+=val;
-            hrv[i]=val;
-            values1.add(new Entry(i, val));
-        }
-        float AVG_HRV=sum/count;
-        Arrays.sort(hrv);
-        TextView textView1=(TextView) findViewById(R.id.max_min_hrv);
-        textView1.setText(String.valueOf(hrv[0])+"//"+String.valueOf(hrv[count-1]));
-        TextView textView=(TextView) findViewById(R.id.avg_hrv);
-        textView.setText(String.valueOf(AVG_HRV));
-
-        LineDataSet set1, set2, set3,set4;
-
-        if (chartHRV.getData() != null &&
-                chartHRV.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) chartHRV.getData().getDataSetByIndex(0);
-
-            set1.setValues(values1);
-
-            chartHRV.getData().notifyDataChanged();
-            chartHRV.notifyDataSetChanged();
-        } else {
-            // create a dataset and give it a type
-            set1 = new LineDataSet(values1, "HRV ");
-
-            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set1.setColor(ColorTemplate.getHoloBlue());
-            set1.setCircleColor(Color.GREEN);
-            set1.setColor(Color.GREEN);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(ColorTemplate.getHoloBlue());
-            set1.setHighLightColor(Color.rgb(244, 117, 117));
-            set1.setDrawCircleHole(false);
-            //set1.setFillFormatter(new MyFillFormatter(0f));
-            //set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setVisible(false);
-            //set1.setCircleHoleColor(Color.WHITE);
-
-
-            // create a data object with the data sets
-            LineData data = new LineData(set1);
-            data.setValueTextColor(Color.WHITE);
-            data.setValueTextSize(9f);
-
-            // set data
-            chartHRV.setData(data);
-        }
-    }
 
 
 
