@@ -2,149 +2,198 @@
 
 
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-    android:orientation="vertical"
-app:layout_behavior="@string/appbar_scrolling_view_behavior"
-tools:context=".Simply_referencs_Activity2"
-tools:showIn="@layout/app_bar_simply_referencs_2">
-
-
-<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/chart1"
-                android:layout_width="match_parent"
-                android:layout_height="219dp"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="평균 HR:" />
-
-                <TextView
-                    android:id="@+id/avg_hr"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:text="최소/최대"
-                    />
-                <TextView
-                    android:id="@+id/max_min_hr"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-        </LinearLayout>
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Simply_referencs_Activity2"
+    tools:showIn="@layout/app_bar_simply_referencs_2">
 
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="348dp"
+            android:layout_weight="8"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/piechart"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_above="@+id/seekBar1" />
-
-            <SeekBar
-                android:id="@+id/seekBar2"
+            android:layout_margin="20dp">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="8dp"
-                android:layout_toLeftOf="@+id/tvYMax"
-                android:layout_marginRight="5dp"
-                android:max="200"
-                android:paddingBottom="12dp" />
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="나의 수면 점수는?"
+                    android:gravity="center"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"/>
 
-            <SeekBar
-                android:id="@+id/seekBar1"
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:layout_above="@+id/seekBar2"
-                android:layout_margin="8dp"
-                android:layout_marginBottom="35dp"
-                android:layout_toLeftOf="@+id/tvXMax"
-                android:layout_marginRight="5dp"
-                android:max="25"
-                android:paddingBottom="12dp" />
+                android:layout_weight="4"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvXMax"
-                android:layout_width="50dp"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:layout_alignBottom="@+id/seekBar1"
-                android:layout_alignParentRight="true"
-                android:text="-"
-                android:layout_marginBottom="15dp"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvYMax"
-                android:layout_width="50dp"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:layout_alignBottom="@+id/seekBar2"
-                android:layout_alignParentRight="true"
-                android:text="-"
-                android:layout_marginBottom="15dp"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text="수면의 단계 확인" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="총 수면 시간 :" />
+
+                        <TextView
+                            android:id="@+id/total_sleep"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="취침 시간: " />
+
+                        <TextView
+                            android:id="@+id/sleep"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="기상 시간 :" />
+
+                        <TextView
+                            android:id="@+id/wake"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="444dp">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/seekBar1"
+                    android:layout_margin="20dp"/>
+
+
+
+
+                <TextView
+                    android:id="@+id/tvXMax"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seekBar1"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="right"
+
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/tvYMax"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/seekBar2"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="right"
+
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="수면단계별 시간:"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/min"
+                    android:hint="deep , light, rem"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
-
-
-
-
-
-
-
-
-

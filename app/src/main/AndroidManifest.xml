@@ -12,9 +12,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_doctor"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_doctor_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Register_Guardian_Activity"></activity>
@@ -25,7 +25,7 @@
         <activity android:name=".StatusCheckActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
+            android:label="Dr.Bed"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,9 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".ServerSetActivity" />
         <activity
             android:name=".Changing_info_Activity"

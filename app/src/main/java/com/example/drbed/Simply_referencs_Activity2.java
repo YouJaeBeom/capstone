@@ -18,22 +18,65 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.drbed.custom.DayAxisValueFormatter;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,13 +89,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Simply_referencs_Activity2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
 
+    public int total_time;
     public String PW = "";
     public String Name = "";
     public String Phone = "";
@@ -62,7 +108,9 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
     public String ID2 = "";
     String stop_time="";
     String start_time="";
-
+    private PieChart chart2;
+    private SeekBar seekBarX, seekBarY;
+    private TextView tvX, tvY;
     String Status1="";
     String Status2="";
     SleepStep sleepStep=new SleepStep();
@@ -118,7 +166,6 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         else if(Static_setting.Status.contains("Ward"))
         {
             Check_sleep_start_Time(Static_setting.ID,getTime);
-
         }
 
 //        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+start_time);
@@ -186,6 +233,40 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@");
         Log.e(this.getClass().getName(), "stop_time"+stop_time);
         Log.e(this.getClass().getName(), "Start_time"+start_time);
+        if(Static_setting.Status.contains("Guardian"))
+        {
+
+            new BackgroundTask().execute(Static_setting.Protected_ID,start_time,stop_time);
+        }
+        else if(Static_setting.Status.contains("Ward"))
+        {
+
+            new BackgroundTask().execute(Static_setting.ID,start_time,stop_time);
+        }
+        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
+        TextView text_sleep= (TextView) findViewById(R.id.sleep);
+        TextView text_wake= (TextView) findViewById(R.id.wake);
+
+
+
+        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date start_time1= null; ///9
+        Date stop_time1=null;
+        try {
+            start_time1 = dateFormat.parse(start_time);
+            stop_time1= dateFormat.parse(stop_time); //10
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long duration = stop_time1.getTime()-start_time1.getTime();
+        long min = duration/60000;
+        int hour= (int) (min/60);
+        int min1= (int) (min%60);
+        String total_time=String.valueOf(min);
+        text_total_sleep.setText(hour+"시간"+min1+"분");
+        text_sleep.setText(start_time);
+        text_wake.setText(stop_time);
+
     }
 
 
@@ -314,19 +395,22 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
 
 
+
         @Override
         protected void onPreExecute() {
-            target = "http://dbwo4011.cafe24.com/DRbed/dataRequest.php";
-
+            target = "http://dbwo4011.cafe24.com/DRbed/sleep_step_request.php";
+            Log.e(this.getClass().getName(), "백그라운드로 list뽑기 시작한다.");
         }
-        String sendMsg;
+
         @Override
         protected String doInBackground(String... params) {
             try {
                 String ID=params[0];
-                String Time = params[1];
+                String start_time = params[1];
+                String stop_time = params[2];
                 String data = URLEncoder.encode("ID","UTF-8")+"="+URLEncoder.encode(ID,"UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
-                data+= "&"+URLEncoder.encode("Time","UTF-8")+"="+URLEncoder.encode(Time,"UTF-8");
+                data+= "&"+URLEncoder.encode("start_time","UTF-8")+"="+URLEncoder.encode(start_time,"UTF-8");
+                data+= "&"+URLEncoder.encode("stop_time","UTF-8")+"="+URLEncoder.encode(stop_time,"UTF-8");
                 URL url = new URL(target);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST"); //post방식으로
@@ -360,19 +444,23 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
         @Override
         public void onPostExecute(String res) {
+            Log.e(this.getClass().getName(), "백그라운드 try문안으로");
             try {
+                Log.e(this.getClass().getName(), "백그라운드 try문안으로");
                 JSONObject jsonObject = new JSONObject(res);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
+                Log.e(this.getClass().getName(), "jsonArray"+jsonArray);
                 int count = 0;
                 while(count < jsonArray.length()){
+                    Log.e(this.getClass().getName(), "들어오긴하냐?");
                     JSONObject object = jsonArray.getJSONObject(count);
                     sleepStep.setIDList(object.getString("ID"));
                     sleepStep.setTimeList(object.getString("Time"));
                     sleepStep.setSleep_stepList(object.getString("Sleep_step"));
 
-                    Log.e(this.getClass().getName(), "HR"+sleepStep.getIDList(count));
-                    Log.e(this.getClass().getName(), "RR"+sleepStep.getTimeList(count));
-                    Log.e(this.getClass().getName(), "SV"+sleepStep.getSleep_stepList(count));
+                    Log.e(this.getClass().getName(), count+"  ID "+sleepStep.getIDList(count));
+                    Log.e(this.getClass().getName(), count+"  Time "+sleepStep.getTimeList(count));
+                    Log.e(this.getClass().getName(), count+"  Sleep_step "+sleepStep.getSleep_stepList(count));
 
                     count++;
                 }
@@ -402,10 +490,10 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         chart.setPinchZoom(true);
 
         // set an alternative background color
-        chart.setBackgroundColor(Color.LTGRAY);
+        chart.setBackgroundColor(Color.WHITE);
 
         LineData data = new LineData();
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.BLACK);
 
         // add empty data
         chart.setData(data);
@@ -416,51 +504,151 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         //l.setTypeface(tfLight);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
+        ValueFormatter xAxisFormatter = new DayAxisValueFormatter(chart);
 
         XAxis xl = chart.getXAxis();
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xl.setTypeface(tfLight);
-        xl.setTextColor(Color.WHITE);
+        xl.setTextColor(Color.BLACK);
         xl.setDrawGridLines(false);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
 
         YAxis leftAxis = chart.getAxisLeft();
         //leftAxis.setTypeface(tfLight);
-        leftAxis.setTextColor(Color.WHITE);
-        leftAxis.setAxisMaximum(100f);
-        leftAxis.setAxisMinimum(0f);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setAxisMaximum(4);
+
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+       // rightAxis.setTypeface(tfLight);
+        rightAxis.setLabelCount(8, false);
+       // rightAxis.setValueFormatter(custom);
+        rightAxis.setSpaceTop(15f);
+        rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
         rightAxis.setEnabled(false);
 
-        for(int i=0;i<sleepStep.getTotalLength();i++) {
-            setHRData(i, 200);
+
+
+        chart2 = findViewById(R.id.chart2);
+        chart2.setUsePercentValues(true);
+        chart2.getDescription().setEnabled(false);
+        chart2.setExtraOffsets(5, 10, 5, 5);
+
+        chart2.setDragDecelerationFrictionCoef(0.95f);
+
+        //chart2.setCenterTextTypeface(tfLight);
+        chart2.setCenterText(generateCenterSpannableText());
+
+        chart2.setDrawHoleEnabled(true);
+        chart2.setHoleColor(Color.WHITE);
+
+        chart2.setTransparentCircleColor(Color.WHITE);
+        chart2.setTransparentCircleAlpha(110);
+
+        chart2.setHoleRadius(58f);
+        chart2.setTransparentCircleRadius(61f);
+
+        chart2.setDrawCenterText(true);
+
+        chart2.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart2.setRotationEnabled(true);
+        chart2.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+        chart2.setOnChartValueSelectedListener(this);
+
+        chart2.animateY(1400, Easing.EaseInOutQuad);
+        // chart.spin(2000, 0, 360);
+
+        Legend l2 = chart2.getLegend();
+        l2.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l2.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l2.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l2.setDrawInside(false);
+        l2.setXEntrySpace(7f);
+        l2.setYEntrySpace(0f);
+        l2.setYOffset(0f);
+
+        // entry label styling
+        chart2.setEntryLabelColor(Color.BLACK);
+       // chart2.setEntryLabelTypeface(tfRegular);
+        chart2.setEntryLabelTextSize(12f);
+
+
+
+        try {
+            Get_time_diff(sleepStep.getTotalLength());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+
         //setRRData(totaldata_info.getTotalLength(),200);
         //setSVData(totaldata_info.getTotalLength(),200);
         //setHRVData(totaldata_info.getTotalLength(),200);
     }
 
+    private CharSequence generateCenterSpannableText() {
+        SpannableString s = new SpannableString("DR.BED\nSleep phase percentage ");
+        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
+        s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
+        return s;
+    }
+
+    private void Get_time_diff(int totalLength) throws ParseException {
+        Log.e(this.getClass().getName(), "totalLength"+totalLength);
+        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        for(int i=0;i<totalLength-1;i++)
+        {
+            Date first= dateFormat.parse(sleepStep.getTimeList(i)); ///9
+            Date second= dateFormat.parse(sleepStep.getTimeList(i+1)); //10
+            long duration = second.getTime()-first.getTime();
+            long min = duration/60000;
+            Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+            String dif_min=String.valueOf(min);
+            sleepStep.setSleep_time_diffList(dif_min);
+        }
+        Log.e(this.getClass().getName(), "시간차 list길이"+sleepStep.getSleep_time_diffListTotalLength());
+        for(int i=0;i<sleepStep.getSleep_time_diffListTotalLength();i++){
+            for(int l=0;l<Integer.parseInt(sleepStep.getSleep_time_diffList(i));l++){
+                setData(i,200);
+            }
+        }
+        setpieData(sleepStep.getSleep_time_diffListTotalLength());
+
+    }
+
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "Dynamic Data");
+        LineDataSet set = new LineDataSet(null, "수면의 단계 : 1 (Deep sleep) , 2 (Light sleep), 3 (Rem sleep)");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.WHITE);
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
+        set.setCircleColor(Color.BLACK);
+        set.setLineWidth(1f);
+        set.setCircleRadius(1f);
         set.setFillAlpha(65);
         set.setFillColor(ColorTemplate.getHoloBlue());
         set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.WHITE);
+        set.setValueTextColor(Color.BLACK);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
         return set;
     }
 
-    private void setHRData(int count, float range) {
+    private void setData(int count, float range) {
 
         LineData data = chart.getData();
 
@@ -475,7 +663,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             }
 
 
-               // data.addEntry(new Entry(set.getEntryCount(), totaldata_info.getHRList(count)), 0);
+            data.addEntry(new Entry(set.getEntryCount(), Float.parseFloat(sleepStep.getSleep_stepList(count))), 0);
 
             data.notifyDataChanged();
 
@@ -487,15 +675,127 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             // chart.setVisibleYRange(30, AxisDependency.LEFT);
 
             // move to the latest entry
-            chart.moveViewToX(data.getEntryCount());
+
 
             // this automatically refreshes the chart (calls invalidate())
             // chart.moveViewTo(data.getXValCount()-7, 55f,
             // AxisDependency.LEFT);
+
         }
 
     }
 
+
+    private void setpieData(int count) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        int deeptime=0;
+        int lighttime=0;
+        int remtime=0;
+        for(int i=0;i<count;i++)
+        {
+            if(sleepStep.getSleep_stepList(i).contains("1"))//DEEP
+            {
+                deeptime+=Integer.parseInt(sleepStep.getSleep_time_diffList(i));
+            }
+            if(sleepStep.getSleep_stepList(i).contains("2"))//light
+            {
+                lighttime+=Integer.parseInt(sleepStep.getSleep_time_diffList(i));
+            }
+            if(sleepStep.getSleep_stepList(i).contains("3"))//rem
+            {
+                remtime+=Integer.parseInt(sleepStep.getSleep_time_diffList(i));
+            }
+        }
+
+        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date before= null; ///9
+        Date starttime=null;
+        Date st_time=null;
+        Date star_time=null;
+        try {
+            starttime=dateFormat.parse(sleepStep.getTimeList(0));
+            before = dateFormat.parse(sleepStep.getTimeList(count));
+            st_time= dateFormat.parse(stop_time); //10
+            star_time= dateFormat.parse(start_time); //10
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long duration11 = starttime.getTime()-star_time.getTime();
+        long min33 = duration11/60000;
+        long duration = st_time.getTime()-before.getTime();
+        long min22 = duration/60000;
+        remtime+=min22+min33;
+        Log.e(this.getClass().getName(), "deeptime"+deeptime);
+        Log.e(this.getClass().getName(), "lighttime"+lighttime);
+        Log.e(this.getClass().getName(), "remtime"+remtime);
+        int total_time = deeptime + lighttime + remtime;
+        Log.e(this.getClass().getName(), "total_time"+total_time);
+        Log.e(this.getClass().getName(), "deeptime per"+(float)deeptime/total_time);
+        Log.e(this.getClass().getName(), "lighttime per"+(float)lighttime/total_time);
+        Log.e(this.getClass().getName(), "remtime per"+(float)remtime/total_time);
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        entries.add(new PieEntry(deeptime,"Deep sleep"));
+        entries.add(new PieEntry(lighttime,"Light sleep"));
+        entries.add(new PieEntry(remtime,"Rem sleep" ));
+
+        TextView min= (TextView) findViewById(R.id.min);
+        min.setText("Deep sleep:"+deeptime+"\nLight sleep: "+lighttime+"\nRem sleep: "+remtime);
+
+
+
+
+
+        TextView text_score= (TextView) findViewById(R.id.score);
+        int sum=deeptime+lighttime;
+        float sum1=(float)sum/total_time;
+        text_score.setText(sum1*100+"점/100점");
+
+        PieDataSet dataSet = new PieDataSet(entries, "수면단계별 %");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data2 = new PieData(dataSet);
+        data2.setValueFormatter(new PercentFormatter(chart2));
+        data2.setValueTextSize(11f);
+        data2.setValueTextColor(Color.BLACK);
+        //data2.setValueTypeface(tfLight);
+        chart2.setData(data2);
+
+        // undo all highlights
+        chart2.highlightValues(null);
+
+        chart2.invalidate();
+    }
 
 
 
@@ -592,7 +892,11 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-
+        if (e == null)
+            return;
+        Log.i("VAL SELECTED",
+                "Value: " + e.getY() + ", index: " + h.getX()
+                        + ", DataSet index: " + h.getDataSetIndex());
     }
 
     @Override

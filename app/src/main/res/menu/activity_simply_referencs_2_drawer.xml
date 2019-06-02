@@ -4,34 +4,33 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_Main"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Mian" />
+            android:title="Main" />
         <item
             android:id="@+id/nav_sleep_report_previous"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Sleep report (Previous day)" />
+            android:title="Sleep report (Daily)" />
         <item
             android:id="@+id/nav_sleep_report_week"
-            android:icon="@drawable/ic_menu_slideshow"
+
             android:title="Sleep report (Week)" />
         <item
             android:id="@+id/nav_check_ward"
-            android:icon="@drawable/ic_menu_manage"
+
             android:title="Check ward" />
     </group>
 
-    <item android:title="Setting">
+    <item android:title="INFORMATION">
         <menu>
             <item
                 android:id="@+id/nav_body_information_settings"
-                android:icon="@drawable/ic_menu_share"
-                android:title="body information settings" />
+
+                android:title="Body Information" />
             <item
                 android:id="@+id/nav_guardian_ward_setting"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Guardian-Ward Setting" />
+
+                android:title="Protected Person Update" />
         </menu>
     </item>
 

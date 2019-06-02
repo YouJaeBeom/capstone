@@ -3,25 +3,22 @@ package com.example.drbed;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,7 +29,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -83,11 +79,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-        Drawable alpha=((ImageView)findViewById(R.id.img)).getDrawable();
-        alpha.setAlpha(50);
-        TextView textView=(TextView)findViewById(R.id.drbed);
+        //Drawable alpha=((ImageView)findViewById(R.id.img)).getDrawable();
+        //alpha.setAlpha(50);
+        //TextView textView=(TextView)findViewById(R.id.drbed);
         Typeface typeface= Typeface.createFromAsset(getAssets(),"a새김.ttf");
-        textView.setTypeface(typeface);
+        //textView.setTypeface(typeface);
 
 
 
@@ -111,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onClick(View view) {
 
 
-                    attemptLogin();
+                attemptLogin();
 
 
             }

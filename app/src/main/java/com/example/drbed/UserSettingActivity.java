@@ -1,7 +1,9 @@
 package com.example.drbed;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -41,6 +43,7 @@ public class UserSettingActivity extends AppCompatActivity
 //    private TextView text_SV= (TextView) findViewById(R.id.text_SV);
 //    private TextView text_HRV= (TextView) findViewById(R.id.text_HRV);
     private int i;
+    public int count=60;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +146,8 @@ public class UserSettingActivity extends AppCompatActivity
 
     public void SimpleThread()
     {
+        CheckTypesTask task = new CheckTypesTask();
+        task.execute();
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -208,7 +213,7 @@ public class UserSettingActivity extends AppCompatActivity
                         if(health_info.getHR()==0)
                         {
                             Log.e(this.getClass().getName(), "0이야");
-                            i--;
+                            count++;
                             Log.e(this.getClass().getName(), "현재 i값 감소 "+i);
                         }
                         else {
@@ -224,12 +229,6 @@ public class UserSettingActivity extends AppCompatActivity
 
                         }
                     } else {
-                        Log.e(this.getClass().getName(), "Dataset fail");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UserSettingActivity.this);
-                        builder.setMessage("Dataset fail")
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
 
                     }
                 } catch (Exception e) {
@@ -286,6 +285,41 @@ public class UserSettingActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class CheckTypesTask extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(
+                UserSettingActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("측정중입니다...");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            try {
+                for (int i = 0; i < count; i++) {
+                    asyncDialog.setProgress(i * 2);
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            asyncDialog.dismiss();
+            super.onPostExecute(result);
+        }
     }
 
     @Override
