@@ -44,6 +44,7 @@ public class UserSettingActivity extends AppCompatActivity
 //    private TextView text_HRV= (TextView) findViewById(R.id.text_HRV);
     private int i;
     public int count=60;
+    public int hr0=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,8 +153,14 @@ public class UserSettingActivity extends AppCompatActivity
             @Override
             public void run() {
 
-                for (i = 0; i < 300; i++) {
+                for (i = 0; i < count; i++) {
                     StartAVG();
+                    if(hr0>30)
+                    {
+                        thread.interrupted();
+                        hr0=0;
+
+                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -214,8 +221,10 @@ public class UserSettingActivity extends AppCompatActivity
                         {
                             Log.e(this.getClass().getName(), "0이야");
                             count++;
+                            hr0++;
                             Log.e(this.getClass().getName(), "현재 i값 감소 "+i);
                         }
+
                         else {
                             Static_setting.sumHR += health_info.getHR();
                             Static_setting.sumRR += health_info.getRR();
@@ -229,6 +238,8 @@ public class UserSettingActivity extends AppCompatActivity
 
                         }
                     } else {
+                        count++;
+                            hr0++;
 
                     }
                 } catch (Exception e) {
@@ -295,7 +306,7 @@ public class UserSettingActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("측정중입니다...");
+            asyncDialog.setMessage("약 1분간 측정중입니다...");
 
             // show dialog
             asyncDialog.show();
@@ -307,6 +318,12 @@ public class UserSettingActivity extends AppCompatActivity
             try {
                 for (int i = 0; i < count; i++) {
                     asyncDialog.setProgress(i * 2);
+                    if(hr0>30)
+                    {
+                        asyncDialog.dismiss();
+                        Thread.interrupted();
+                        hr0=0;
+                    }
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
@@ -318,6 +335,17 @@ public class UserSettingActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             asyncDialog.dismiss();
+            if(hr0>30)
+            {
+                asyncDialog.dismiss();
+                Thread.interrupted();
+                hr0=0;
+                AlertDialog.Builder builder = new AlertDialog.Builder(UserSettingActivity.this);
+                builder.setMessage("센서를 연결이 불량입니다\n 조정 후 다시 시도해주세요 ")
+                        .setNegativeButton("확인", null)
+                        .create()
+                        .show();
+            }
             super.onPostExecute(result);
         }
     }

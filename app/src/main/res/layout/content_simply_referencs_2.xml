@@ -77,11 +77,13 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_weight="1"
                             android:text="총 수면 시간 :" />
 
                         <TextView
                             android:id="@+id/total_sleep"
+                            android:gravity="center"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
@@ -90,23 +92,26 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.5"
+                        android:layout_weight="1"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="취침 시간: " />
+                            android:text="취침 시간: "
+                            android:gravity="center"/>
 
                         <TextView
                             android:id="@+id/sleep"
                             android:layout_width="0dp"
+                            android:gravity="center"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
 
                         <TextView
                             android:layout_width="0dp"
+                            android:gravity="center"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="기상 시간 :" />
@@ -114,6 +119,7 @@
                         <TextView
                             android:id="@+id/wake"
                             android:layout_width="0dp"
+                            android:gravity="center"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
                     </LinearLayout>

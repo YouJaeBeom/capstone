@@ -168,106 +168,10 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             Check_sleep_start_Time(Static_setting.ID,getTime);
         }
 
-//        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+start_time);
-//        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+stop_time);
-//        Log.e(this.getClass().getName(), "Start_time"+start_time);
-//        Log.e(this.getClass().getName(), "stop_time"+stop_time);
 
-       // new BackgroundTask().execute(Static_setting.ID,getTime);
-
-
-
-       // Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@쓰레드 끝남유");
 
     }
 
-    private void Check_sleep_stop_Time(String ID,String Time) {
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                try {
-
-
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    Log.e(this.getClass().getName(), "success!" + success);
-
-                    if (success) {
-                        Log.e(this.getClass().getName(), "성공함!");
-                        Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
-                         ID1 =jsonResponse.getString("ID");
-                         stop_time =jsonResponse.getString("Time");
-                         Status1 =jsonResponse.getString("Status");
-                            //Log.e(this.getClass().getName(), "Start_time"+start_time);
-
-                            startSleepQulity();
-
-
-
-                    } else {
-                        Log.e(this.getClass().getName(), "Dataset fail");
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Simply_referencs_Activity2.this);
-                        builder.setMessage("기상하지 않아 확인이 어렵습니다.")
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
-
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Sleep_stop_Time_Request sleep_stop_time_request = new Sleep_stop_Time_Request(ID, Time, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
-        queue.add(sleep_stop_time_request);
-
-    }
-
-    private void startSleepQulity() {
-        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time);
-        Log.e(this.getClass().getName(), "Start_time"+start_time);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask().execute(Static_setting.Protected_ID,start_time,stop_time);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask().execute(Static_setting.ID,start_time,stop_time);
-        }
-        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-        TextView text_wake= (TextView) findViewById(R.id.wake);
-
-
-
-        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date start_time1= null; ///9
-        Date stop_time1=null;
-        try {
-            start_time1 = dateFormat.parse(start_time);
-            stop_time1= dateFormat.parse(stop_time); //10
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long duration = stop_time1.getTime()-start_time1.getTime();
-        long min = duration/60000;
-        int hour= (int) (min/60);
-        int min1= (int) (min%60);
-        String total_time=String.valueOf(min);
-        text_total_sleep.setText(hour+"시간"+min1+"분");
-        text_sleep.setText(start_time);
-        text_wake.setText(stop_time);
-
-    }
 
 
     private void Check_sleep_start_Time(final String ID, final String Time) {
@@ -294,8 +198,6 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
                         Date date = new Date(now);
                         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Calendar calendar=Calendar.getInstance();
-
-                        calendar.setTime(date);
                         calendar.add(Calendar.SECOND,-1);
 
                         String getTime=df.format(calendar.getTime());
@@ -322,8 +224,17 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             }
         };
 
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar=Calendar.getInstance();
 
-        Sleep_start_Time_Request sleep_start_time_request = new Sleep_start_Time_Request(ID, Time, responseListener);
+        calendar.setTime(date);
+
+
+        String date1=df.format(calendar.getTime());
+        Log.e(this.getClass().getName(), "Sleep_start_Time_Request @@@@@@@@@@ date1!" + date1);
+        Sleep_start_Time_Request sleep_start_time_request = new Sleep_start_Time_Request(ID, Time,date1, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
         queue.add(sleep_start_time_request);
 
@@ -383,12 +294,116 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
             }
         };
 
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
 
-        Sleep_start_Time_before_Request sleep_start_time_before_request = new Sleep_start_Time_before_Request(ID, Time, responseListener);
+        String date1=df.format(calendar.getTime());
+        Log.e(this.getClass().getName(), "Sleep_start_Time_before_Request @@@@@@@@@@ date1!" + date1);
+        Sleep_start_Time_before_Request sleep_start_time_before_request = new Sleep_start_Time_before_Request(ID, Time,date1, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
         queue.add(sleep_start_time_before_request);
 
     }
+
+    private void Check_sleep_stop_Time(String ID,String Time) {
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    Log.e(this.getClass().getName(), "success!" + success);
+
+                    if (success) {
+                        Log.e(this.getClass().getName(), "성공함!");
+                        Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
+                        ID1 =jsonResponse.getString("ID");
+                        stop_time =jsonResponse.getString("Time");
+                        Status1 =jsonResponse.getString("Status");
+                        //Log.e(this.getClass().getName(), "Start_time"+start_time);
+
+                        startSleepQulity();
+
+
+
+                    } else {
+                        Log.e(this.getClass().getName(), "Dataset fail");
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Simply_referencs_Activity2.this);
+                        builder.setMessage("기상하지 않아 확인이 어렵습니다.")
+                                .setNegativeButton("확인", null)
+                                .create()
+                                .show();
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar=Calendar.getInstance();
+
+        calendar.setTime(date);
+
+
+        String date1=df.format(calendar.getTime());
+        Sleep_stop_Time_Request sleep_stop_time_request = new Sleep_stop_Time_Request(ID, Time,date1, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
+        queue.add(sleep_stop_time_request);
+
+    }
+
+    private void startSleepQulity() {
+        Log.e(this.getClass().getName(), "@@@@@@@@@@@@@@@@@@@@@@@");
+        Log.e(this.getClass().getName(), "stop_time"+stop_time);
+        Log.e(this.getClass().getName(), "Start_time"+start_time);
+        if(Static_setting.Status.contains("Guardian"))
+        {
+
+            new BackgroundTask().execute(Static_setting.Protected_ID,start_time,stop_time);
+        }
+        else if(Static_setting.Status.contains("Ward"))
+        {
+
+            new BackgroundTask().execute(Static_setting.ID,start_time,stop_time);
+        }
+        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
+        TextView text_sleep= (TextView) findViewById(R.id.sleep);
+        TextView text_wake= (TextView) findViewById(R.id.wake);
+
+
+
+        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date start_time1= null; ///9
+        Date stop_time1=null;
+        try {
+            start_time1 = dateFormat.parse(start_time);
+            stop_time1= dateFormat.parse(stop_time); //10
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long duration = stop_time1.getTime()-start_time1.getTime();
+        long min = duration/60000;
+        int hour= (int) (min/60);
+        int min1= (int) (min%60);
+        String total_time=String.valueOf(min);
+        text_total_sleep.setText(hour+"시간"+min1+"분");
+        text_sleep.setText(start_time);
+        text_wake.setText(stop_time);
+
+    }
+
 
     class BackgroundTask extends AsyncTask<String, Void, String> {
         String target;
