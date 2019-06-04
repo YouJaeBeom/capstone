@@ -34,7 +34,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.StackedValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -49,6 +51,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +61,7 @@ import com.example.drbed.custom.MyValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class Check_sleep_quality_Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnChartValueSelectedListener {
     public String ID = "";
     public String PW = "";
     public String Name = "";
@@ -177,13 +180,54 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
         하루마다 수면시간 가지고오도록
          */
         //new BackgroundTask().execute("2019-05-30 07:20:00","2019-05-30 07:50:00");
+        chart = findViewById(R.id.chart1);
+        chart.setOnChartValueSelectedListener(this);
 
+        chart.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        chart.setMaxVisibleValueCount(40);
+
+        // scaling can now only be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+        chart.setDrawGridBackground(false);
+        chart.setDrawBarShadow(false);
+
+        chart.setDrawValueAboveBar(false);
+        chart.setHighlightFullBarEnabled(false);
+
+        // change the position of the y-labels
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setValueFormatter(new MyValueFormatter("분"));
+        leftAxis.setAxisMinimum(0); // this replaces setStartAtZero(true)
+        chart.getAxisRight().setEnabled(false);
+
+        XAxis xLabels = chart.getXAxis();
+        xLabels.setPosition(XAxis.XAxisPosition.TOP);
+
+        // chart.setDrawXLabels(false);
+        // chart.setDrawYLabels(false);
+
+
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setFormSize(8f);
+        l.setFormToTextSpace(4f);
+        l.setXEntrySpace(6f);
+
+        // chart.setDrawLegend(false);
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.SECOND,-1);
+
         String getTime=df.format(calendar.getTime());
 
         Calendar calendar1=Calendar.getInstance();
@@ -275,8 +319,8 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Date date = new Date(now);
                         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
 
-                        calendar.add(Calendar.SECOND,-1);
 
                         String getTime=df.format(calendar.getTime());
                         if(Static_setting.Status.contains("Guardian"))
@@ -343,7 +387,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Calendar calendar=Calendar.getInstance();
 
-                        calendar.add(Calendar.SECOND,-1);
 
                         String getTime=df.format(calendar.getTime());
                         if(Static_setting.Status.contains("Guardian"))
@@ -369,7 +412,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
 
@@ -592,7 +635,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -2);
 
@@ -817,7 +860,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -3);
 
@@ -1018,7 +1061,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
 
 
-                        calendar.add(Calendar.DATE, -4);
+                        calendar.add(Calendar.DATE, -3);
 
                         String getTime=df.format(calendar.getTime());
                         if(Static_setting.Status.contains("Guardian"))
@@ -1043,9 +1086,9 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
-        calendar.add(Calendar.DATE, -3);
+        calendar.add(Calendar.DATE, -4);
 
 
 
@@ -1268,7 +1311,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -5);
 
@@ -1492,7 +1535,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -6);
 
@@ -1702,7 +1745,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "66666666666666666666666666666666666666666 시작점못찾음");
-
+                        startSleepQulity6();
 
                     }
                 } catch (Exception e) {
@@ -1713,7 +1756,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 12");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -7);
 
@@ -1754,13 +1797,14 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "66666666666666666666666666666666666666666 stop찾지못함");
-
+                        startSleepQulity6();
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
         };
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -1815,6 +1859,32 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 //        text_wake.setText(stop_time);
 
     }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        BarEntry entry = (BarEntry) e;
+
+        if (entry.getYVals() != null)
+            Log.i("VAL SELECTED", "Value: " + entry.getYVals()[h.getStackIndex()]);
+        else
+            Log.i("VAL SELECTED", "Value: " + entry.getY());
+    }
+
+    private int[] getColors() {
+
+        // have as many colors as stack-values per entry
+        int[] colors = new int[3];
+
+        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, 3);
+
+        return colors;
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
     class BackgroundTask0 extends AsyncTask<String, Void, String> {
         String target;
 
@@ -1892,7 +1962,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -1973,7 +2046,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -2055,7 +2131,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -2136,7 +2215,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -2217,7 +2299,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -2298,7 +2383,10 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
         }
     }
 
@@ -2379,11 +2467,535 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
+            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            {
+                startchart();
+            }
 
         }
     }
 
-     class CheckTypesTask extends AsyncTask<Void, Void, Void> {
+    private void startchart() {
+        for(int l=0;l<7;l++)
+        {
+            if(l==0)
+            {
+                if(sleepStep_0.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_0.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_0.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_0.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_0.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+            if(l==1)
+            {
+                if(sleepStep_1.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_1.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_1.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_1.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_1.setSleep_time_diffList(dif_min);
+                    }
+                }
+
+            }
+            if(l==2)
+            {
+                if(sleepStep_2.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_2.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_2.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_2.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_2.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+            if(l==3)
+            {
+                if(sleepStep_3.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_3.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_3.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_3.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_3.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+            if(l==4)
+            {
+                if(sleepStep_4.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_4.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_4.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_4.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_4.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+            if(l==5)
+            {
+                if(sleepStep_5.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_5.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_5.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_5.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_5.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+            if(l==6)
+            {
+                if(sleepStep_6.getTotalLength()==0){
+                    continue;
+                }
+                else{
+                    SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    for(int i=0;i<sleepStep_6.getTotalLength()-1;i++)
+                    {
+                        Date first= null; ///9
+                        Date second= null; //10
+                        try {
+                            first = dateFormat.parse(sleepStep_6.getTimeList(i));
+                            second = dateFormat.parse(sleepStep_6.getTimeList(i+1));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        long duration = second.getTime()-first.getTime();
+                        long min = duration/60000;
+                        Log.e(this.getClass().getName(), i+"각 단계별로의 시간구하기"+min);
+                        String dif_min=String.valueOf(min);
+                        sleepStep_6.setSleep_time_diffList(dif_min);
+                    }
+                }
+            }
+        }
+
+        int[] count1={0,0,0,0,0,0,0};
+        float[] deeptime={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        float[] lighttime={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        float[] remtime={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        ArrayList<BarEntry> values = new ArrayList<>();
+        for(int l=0; l<7;l++)
+        {
+            if(l==0)
+            {
+                count1[l]=sleepStep_0.getSleep_time_diffListTotalLength();
+            }
+            if(l==1)
+            {
+                count1[l]=sleepStep_1.getSleep_time_diffListTotalLength();
+            }
+            if(l==2)
+            {
+                count1[l]=sleepStep_2.getSleep_time_diffListTotalLength();
+            }
+            if(l==3)
+            {
+                count1[l]=sleepStep_3.getSleep_time_diffListTotalLength();
+            }
+            if(l==4)
+            {
+                count1[l]=sleepStep_4.getSleep_time_diffListTotalLength();
+            }
+            if(l==5)
+            {
+                count1[l]=sleepStep_5.getSleep_time_diffListTotalLength();
+            }
+            if(l==6)
+            {
+                count1[l]=sleepStep_6.getSleep_time_diffListTotalLength();
+            }
+        }
+        for(int l=0;l<7;l++)
+        {
+            for(int i=0;i<count1[l];i++)
+            {
+                if(l==0){
+
+                    if(sleepStep_0.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_0.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_0.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_0.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_0.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_0.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==1){
+                    if(sleepStep_1.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_1.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_1.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_1.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_1.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_1.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==2){
+                    if(sleepStep_2.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_2.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_2.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_2.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_2.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_2.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==3){
+                    if(sleepStep_3.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_3.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_3.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_3.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_3.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_3.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==4){
+                    if(sleepStep_4.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_4.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_4.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_4.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_4.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_4.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==5){
+                    if(sleepStep_5.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_5.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_5.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_5.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_5.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_5.getSleep_time_diffList(i));
+                    }
+                }
+                if(l==6){
+                    if(sleepStep_6.getSleep_stepList(i).contains("1"))//DEEP
+                    {
+                        deeptime[l]+=Integer.parseInt(sleepStep_6.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_6.getSleep_stepList(i).contains("2"))//light
+                    {
+                        lighttime[l]+=Integer.parseInt(sleepStep_6.getSleep_time_diffList(i));
+                    }
+                    if(sleepStep_6.getSleep_stepList(i).contains("3"))//rem
+                    {
+                        remtime[l]+=Integer.parseInt(sleepStep_6.getSleep_time_diffList(i));
+                    }
+                }
+
+            }
+        }
+
+
+
+
+
+        for (int i = 0; i < 7; i++) {
+            float val1 =  deeptime[i];
+            float val2 =  lighttime[i];
+            float val3 =  remtime[i];
+            Log.e(this.getClass().getName(), "i"+i+"// deeptime"+deeptime[i]+"// lighttime"+lighttime[i]+"// remtime"+remtime[i]);
+            values.add(new BarEntry(
+                    i,
+                    new float[]{val1, val2, val3}));
+
+
+        }
+        float[] total={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        float[] sum={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        float[] score={0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        for (int i = 0; i < 7; i++) {
+            total[i]=  deeptime[i]+lighttime[i]+remtime[i];
+        }
+        for(int i=0;i<7;i++)
+        {
+            sum[i]=deeptime[i]+lighttime[i];
+            score[i]=sum[i]/total[i]*100;
+        }
+
+
+
+        TextView text_date0= (TextView) findViewById(R.id.date0);
+        TextView text_date1= (TextView) findViewById(R.id.date1);
+        TextView text_date2= (TextView) findViewById(R.id.date2);
+        TextView text_date3= (TextView) findViewById(R.id.date3);
+        TextView text_date4= (TextView) findViewById(R.id.date4);
+        TextView text_date5= (TextView) findViewById(R.id.date5);
+        TextView text_date6= (TextView) findViewById(R.id.date6);
+        text_date0.setText(stop_time0);
+        text_date1.setText(stop_time1);
+        text_date2.setText(stop_time2);
+        text_date3.setText(stop_time3);
+        text_date4.setText(stop_time4);
+        text_date5.setText(stop_time5);
+        text_date6.setText(stop_time6);
+        TextView text_score0= (TextView) findViewById(R.id.score0);
+        TextView text_score1= (TextView) findViewById(R.id.score1);
+        TextView text_score2= (TextView) findViewById(R.id.score2);
+        TextView text_score3= (TextView) findViewById(R.id.score3);
+        TextView text_score4= (TextView) findViewById(R.id.score4);
+        TextView text_score5= (TextView) findViewById(R.id.score5);
+        TextView text_score6= (TextView) findViewById(R.id.score6);
+        text_score0.setText((int) score[0]+"%");
+        text_score1.setText((int) score[1]+"%");
+        text_score2.setText((int) score[2]+"%");
+        text_score3.setText((int) score[3]+"%");
+        text_score4.setText((int) score[4]+"%");
+        text_score5.setText((int) score[5]+"%");
+        text_score6.setText((int) score[6]+"%");
+        TextView text_time0= (TextView) findViewById(R.id.time0);
+        TextView text_time1= (TextView) findViewById(R.id.time1);
+        TextView text_time2= (TextView) findViewById(R.id.time2);
+        TextView text_time3= (TextView) findViewById(R.id.time3);
+        TextView text_time4= (TextView) findViewById(R.id.time4);
+        TextView text_time5= (TextView) findViewById(R.id.time5);
+        TextView text_time6= (TextView) findViewById(R.id.time6);
+        text_time0.setText((int) total[0]+"분");
+        text_time1.setText((int) total[1]+"분");
+        text_time2.setText((int) total[2]+"분");
+        text_time3.setText((int) total[3]+"분");
+        text_time4.setText((int) total[4]+"분");
+        text_time5.setText((int) total[5]+"분");
+        text_time6.setText((int) total[6]+"분");
+
+        TextView text_total= (TextView) findViewById(R.id.total_sleep);
+        TextView text_avg= (TextView) findViewById(R.id.avg_sleep);
+        TextView text_good= (TextView) findViewById(R.id.goodday);
+        TextView text_bad= (TextView) findViewById(R.id.badday);
+
+        int total_sleep=0;
+        for(int i=0;i<7;i++){
+            total_sleep+=total[i];
+        }
+        float avg=total_sleep/7;
+
+        int avg1= (int) (avg/60);
+        int avg2= (int) (avg%60);
+        int total_sleep1= (int) total_sleep/60;
+        int total_sleep2= (int) total_sleep%60;
+        text_total.setText(String.valueOf(total_sleep1)+"시간"+String.valueOf(total_sleep2)+"분");
+        text_avg.setText(String.valueOf(avg1)+"시간"+String.valueOf(avg2)+"분");
+
+        int maxIndex = 0;
+        int minIndex = 0;
+        int max=0,min=100;
+        for (int i = 0; i < score.length; i++) {
+
+            if(score[i] > max){
+                maxIndex = i;
+                max = (int) score[i];
+            }
+            if(score[i] < min){
+                minIndex = i;
+                min = (int) score[i];
+            }
+        }
+
+        if(maxIndex==0)
+        {
+            text_good.setText(max+"점"+stop_time0);
+        }
+        if(maxIndex==1)
+        {
+            text_good.setText(max+"점"+stop_time1);
+        }
+        if(maxIndex==2)
+        {
+            text_good.setText(max+"점"+stop_time2);
+        }
+        if(maxIndex==3)
+        {
+            text_good.setText(max+"점"+stop_time3);
+        }
+        if(maxIndex==4)
+        {
+            text_good.setText(max+"점"+stop_time4);
+        }
+        if(maxIndex==5)
+        {
+            text_good.setText(max+"점"+stop_time5);
+        }
+        if(maxIndex==6)
+        {
+            text_good.setText(max+"점"+stop_time6);
+        }
+
+        if(minIndex==0)
+        {
+            text_bad.setText(min+"점"+stop_time0);
+        }
+        if(minIndex==1)
+        {
+            text_bad.setText(min+"점"+stop_time1);
+        }
+        if(minIndex==2)
+        {
+            text_bad.setText(min+"점"+stop_time2);
+        }
+        if(minIndex==3)
+        {
+            text_bad.setText(min+"점"+stop_time3);
+        }
+        if(minIndex==4)
+        {
+            text_bad.setText(min+"점"+stop_time4);
+        }
+        if(minIndex==5)
+        {
+            text_bad.setText(min+"점"+stop_time5);
+        }
+        if(minIndex==6)
+        {
+            text_bad.setText(min+"점"+stop_time6);
+        }
+
+
+
+
+
+
+        BarDataSet set1;
+
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            set1 = new BarDataSet(values, "\n<Sleep report week>");
+            set1.setDrawIcons(false);
+            set1.setColors(getColors());
+            set1.setStackLabels(new String[]{"Deep sleep", "Light sleep", "Rem sleep"});
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+
+            BarData data = new BarData(dataSets);
+            data.setValueFormatter(new StackedValueFormatter(false, "", 1));
+            data.setValueTextColor(Color.BLACK);
+
+            chart.setData(data);
+        }
+
+        chart.setFitBars(true);
+        chart.invalidate();
+    }
+
+    class CheckTypesTask extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog asyncDialog = new ProgressDialog(
                 Check_sleep_quality_Activity.this);
@@ -2421,118 +3033,8 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
 
 
-    private void chartstart() {
-        Log.e(this.getClass().getName(), "chartstartchartstartchartstartchartstartchartstartchartstartchartstartchartstartchartstart");
-        tvX = findViewById(R.id.tvXMax);
-        tvY = findViewById(R.id.tvYMax);
 
-        seekBarX = findViewById(R.id.seekBar1);
-        seekBarX.setOnSeekBarChangeListener((SeekBar.OnSeekBarChangeListener) this);
 
-        seekBarY = findViewById(R.id.seekBar2);
-        seekBarY.setOnSeekBarChangeListener((SeekBar.OnSeekBarChangeListener) this);
-
-        chart = findViewById(R.id.chart1);
-        chart.setOnChartValueSelectedListener((OnChartValueSelectedListener) this);
-
-        chart.getDescription().setEnabled(false);
-
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        chart.setMaxVisibleValueCount(40);
-
-        // scaling can now only be done on x- and y-axis separately
-        chart.setPinchZoom(false);
-
-        chart.setDrawGridBackground(false);
-        chart.setDrawBarShadow(false);
-
-        chart.setDrawValueAboveBar(false);
-        chart.setHighlightFullBarEnabled(false);
-
-        // change the position of the y-labels
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setValueFormatter(new MyValueFormatter("min"));
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        chart.getAxisRight().setEnabled(false);
-
-        XAxis xLabels = chart.getXAxis();
-        xLabels.setPosition(XAxis.XAxisPosition.TOP);
-
-        // chart.setDrawXLabels(false);
-        // chart.setDrawYLabels(false);
-
-        // setting data
-        seekBarX.setProgress(12);
-        seekBarY.setProgress(100);
-
-        Legend l = chart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setFormSize(8f);
-        l.setFormToTextSpace(4f);
-        l.setXEntrySpace(6f);
-
-        // chart.setDrawLegend(false);
-        setChart();
-    }
-
-    private void setChart() {
-        tvX.setText(String.valueOf(seekBarX.getProgress()));
-        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-        ArrayList<BarEntry> values = new ArrayList<>();
-
-        for (int i = 0; i < seekBarX.getProgress(); i++) {
-            float mul = (seekBarY.getProgress() + 1);
-            float val1 = (float) (Math.random() * mul) + mul / 3;
-            float val2 = (float) (Math.random() * mul) + mul / 3;
-            float val3 = (float) (Math.random() * mul) + mul / 3;
-
-            values.add(new BarEntry(
-                    i,
-                    new float[]{val1, val2, val3}));
-        }
-
-        BarDataSet set1;
-
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-        } else {
-            set1 = new BarDataSet(values, "주간 수면 시간 ");
-            set1.setDrawIcons(false);
-            set1.setColors(getColors());
-            set1.setStackLabels(new String[]{"Rem sleep", "Deep sleep", "Light sleep"});
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
-
-            BarData data = new BarData(dataSets);
-            data.setValueFormatter(new StackedValueFormatter(false, "", 1));
-            data.setValueTextColor(Color.WHITE);
-
-            chart.setData(data);
-        }
-
-        chart.setFitBars(true);
-        chart.invalidate();
-    }
-
-    private int[] getColors() {
-
-        // have as many colors as stack-values per entry
-        int[] colors = new int[3];
-
-        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, 3);
-
-        return colors;
-    }
 
     @Override
     public void onBackPressed() {

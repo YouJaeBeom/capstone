@@ -7,7 +7,7 @@ public class Static_setting {
     public static String Phone="";
     public static String Status="";
     public static String Protected_ID="";
-
+    public static String Age="";
     public static boolean flag;
 
     public static float sumHR;
@@ -15,9 +15,9 @@ public class Static_setting {
     public static float sumSV;
     public static float sumHRV;
 
-    public static float AVG_HR;
-    public static float AVG_RR;
-    public static float AVG_SV;
-    public static float AVG_HRV;
+    public static int AVG_HR;
+    public static int AVG_RR;
+    public static int AVG_SV;
+    public static int AVG_HRV;
 
 }

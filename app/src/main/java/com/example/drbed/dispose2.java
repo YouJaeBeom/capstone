@@ -29,7 +29,7 @@ import java.util.Date;
 public class dispose2 extends AppCompatActivity {
     static SleepStep_2 sleepStep_2=new SleepStep_2();
 
-     class BackgroundTask extends AsyncTask<String, Void, String> {
+     class BackgroundTask2 extends AsyncTask<String, Void, String> {
         String target;
 
 

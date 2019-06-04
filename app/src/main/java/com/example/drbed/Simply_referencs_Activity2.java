@@ -296,7 +296,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df =new SimpleDateFormat("yyyy-MM-dd 13");
         Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
 
@@ -756,7 +756,13 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         entries.add(new PieEntry(remtime,"Rem sleep" ));
 
         TextView min= (TextView) findViewById(R.id.min);
-        min.setText("Deep sleep:"+deeptime+"\nLight sleep: "+lighttime+"\nRem sleep: "+remtime);
+        int deeptime1=deeptime/60;
+        int deeptime2=deeptime%60;
+        int lighttime1=lighttime/60;
+        int lighttime2=lighttime%60;
+        int remtime1=remtime/60;
+        int remtime2=remtime%60;
+        min.setText("Deep sleep:"+deeptime1+"시간"+deeptime2+"분"+"\nLight sleep: "+lighttime1+"시간"+lighttime2+"분"+"\nRem  sleep: "+remtime1+"시간"+remtime2+"분");
 
 
 
@@ -765,7 +771,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         TextView text_score= (TextView) findViewById(R.id.score);
         int sum=deeptime+lighttime;
         float sum1=(float)sum/total_time;
-        text_score.setText(sum1*100+"점/100점");
+        text_score.setText(Math.round(sum1*100)+"%");
 
         PieDataSet dataSet = new PieDataSet(entries, "수면단계별 %");
 

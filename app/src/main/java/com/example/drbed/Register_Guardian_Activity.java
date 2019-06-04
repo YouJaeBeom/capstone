@@ -65,11 +65,13 @@ public class Register_Guardian_Activity extends AppCompatActivity {
         final EditText ed_PW = (EditText) findViewById(R.id.PW);
         final EditText ed_Name = (EditText) findViewById(R.id.Name);
         final EditText ed_Phone = (EditText) findViewById(R.id.Phone);
+        final EditText ed_Age = (EditText) findViewById(R.id.Age);
         final EditText ed_Ward_ID = (EditText) findViewById(R.id.Ward_ID);
         String ID =ed_ID.getText().toString();
         String PW =ed_PW.getText().toString();
         String Name =ed_Name.getText().toString();
         String Phone =ed_Phone.getText().toString();
+        String Age =ed_Age.getText().toString();
         String Protected_ID=ed_Ward_ID.getText().toString();
 
 
@@ -105,7 +107,7 @@ public class Register_Guardian_Activity extends AppCompatActivity {
                 }
             }
         };
-        Register_Guardian_Request register_guardian_request=new Register_Guardian_Request(ID, PW, Name, Phone,Protected_ID,responseListener);
+        Register_Guardian_Request register_guardian_request=new Register_Guardian_Request(ID, PW, Name, Phone,Protected_ID,Age,responseListener);
         RequestQueue queue= Volley.newRequestQueue(Register_Guardian_Activity.this);
         queue.add(register_guardian_request);
 

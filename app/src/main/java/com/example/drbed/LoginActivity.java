@@ -277,6 +277,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             String Name = jsonResponse.getString("Name");
                             String Phone = jsonResponse.getString("Phone");
                             String Protected_ID = jsonResponse.getString("Protected_ID");
+                            String Age = jsonResponse.getString("Age");
                             Log.e(this.getClass().getName(), "로그인성공!");
                             Log.e(this.getClass().getName(), "ID!" + ID);
                             Log.e(this.getClass().getName(), "PW!" + PW);
@@ -290,6 +291,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             intent.putExtra("Phone", Phone);
                             intent.putExtra("Status", "Guardian");
                             intent.putExtra("Protected_ID", Protected_ID);
+                            intent.putExtra("Age", Age);
                             Log.e(this.getClass().getName(), "로그인성공!");
                             Log.e(this.getClass().getName(), "ID!" + ID);
                             Log.e(this.getClass().getName(), "PW!" + PW);
@@ -340,6 +342,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             String PW = jsonResponse.getString("PW");
                             String Name = jsonResponse.getString("Name");
                             String Phone = jsonResponse.getString("Phone");
+                            String Age = jsonResponse.getString("Age");
                             Log.e(this.getClass().getName(), "로그인성공!");
                             Log.e(this.getClass().getName(), "ID!" + ID);
                             Log.e(this.getClass().getName(), "PW!" + PW);
@@ -351,7 +354,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             intent.putExtra("Name", Name);
                             intent.putExtra("Phone", Phone);
                             intent.putExtra("Status", "Ward");
-
+                            intent.putExtra("Age", Age);
                             Log.e(this.getClass().getName(), "로그인성공!");
                             Log.e(this.getClass().getName(), "ID!" + ID);
                             Log.e(this.getClass().getName(), "PW!" + PW);

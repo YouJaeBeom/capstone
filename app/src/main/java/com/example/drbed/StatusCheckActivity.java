@@ -31,7 +31,7 @@ public class StatusCheckActivity extends AppCompatActivity implements Navigation
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
-        String url ="http://117.16.174.25:8080/javascript_simple.html";
+        String url ="http://117.16.174.25:8080/stream_simple.html";
         webView.loadUrl(url);
 
         Button buttonServiceStart_btn=(Button)findViewById(R.id.buttonServiceStart);

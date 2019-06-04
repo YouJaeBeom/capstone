@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
             Static_setting.Phone = intent.getStringExtra("Phone");
             Static_setting.Status = intent.getStringExtra("Status");
             Static_setting.Protected_ID = intent.getStringExtra("Protected_ID");
-
+            Static_setting.Age = intent.getStringExtra("Age");
         }
         Log.e(this.getClass().getName(),"Main!");
         Log.e(this.getClass().getName(),"ID!"+Static_setting.ID);
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         Log.e(this.getClass().getName(),"Phone!"+Static_setting.Phone);
         Log.e(this.getClass().getName(),"Status!"+Static_setting.Status);
         Log.e(this.getClass().getName(),"Protect_ID!"+Static_setting.Protected_ID);
+
    //     TextView textView=(TextView)findViewById(R.id.test1);
 
 

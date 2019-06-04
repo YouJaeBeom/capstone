@@ -69,11 +69,12 @@ public class RegisterActivity<lntent> extends AppCompatActivity {
             final EditText ed_PW = (EditText) findViewById(R.id.PW);
             final EditText ed_Name = (EditText) findViewById(R.id.Name);
             final EditText ed_Phone = (EditText) findViewById(R.id.Phone);
-
+            final EditText ed_Age = (EditText) findViewById(R.id.Age);
             String ID =ed_ID.getText().toString();
             String PW =ed_PW.getText().toString();
             String Name =ed_Name.getText().toString();
             String Phone =ed_Phone.getText().toString();
+            String Age =ed_Age.getText().toString();
 
 
             Response.Listener<String> responseListener =new Response.Listener<String>() {
@@ -108,7 +109,7 @@ public class RegisterActivity<lntent> extends AppCompatActivity {
                     }
                 }
             };
-            RegisterRequest registerRequest=new RegisterRequest(ID, PW, Name, Phone,responseListener);
+            RegisterRequest registerRequest=new RegisterRequest(ID, PW, Name, Phone,Age,responseListener);
             RequestQueue queue= Volley.newRequestQueue(RegisterActivity.this);
             queue.add(registerRequest);
 

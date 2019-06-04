@@ -92,16 +92,17 @@ public class UserSettingActivity extends AppCompatActivity
                 TextView text_HR= (TextView) findViewById(R.id.text_HR);
                 TextView text_RR= (TextView) findViewById(R.id.text_RR);
                 TextView text_SV= (TextView) findViewById(R.id.text_SV);
-                TextView text_HRV= (TextView) findViewById(R.id.text_HRV);
-                Static_setting.AVG_HR=Static_setting.sumHR/60;
-                Static_setting.AVG_RR=Static_setting.sumRR/60;
-                Static_setting.AVG_SV=Static_setting.sumSV/60;
-                Static_setting.AVG_HRV=Static_setting.sumHRV/60;
+
+                Static_setting.AVG_HR=(int)Static_setting.sumHR/60;
+                Static_setting.AVG_RR=(int)Static_setting.sumRR/60;
+                Static_setting.AVG_SV=(int)Static_setting.sumSV/60;
+                Static_setting.AVG_HRV=(int)Static_setting.sumHRV/60;
                 text_HR.setText( String.valueOf(Static_setting.AVG_HR));
                 text_RR.setText( String.valueOf(Static_setting.AVG_RR));
                 text_SV.setText( String.valueOf(Static_setting.AVG_SV));
-                text_HRV.setText( String.valueOf(Static_setting.AVG_HRV));
+
                 insertAVGdata();
+                showdata();
 
             }
         });
@@ -109,40 +110,322 @@ public class UserSettingActivity extends AppCompatActivity
 
     }
 
+    private void showdata() {
+        TextView text_standardHR= (TextView) findViewById(R.id.text_standardHR);
+        TextView text_standardRR= (TextView) findViewById(R.id.text_standardRR);
+        TextView text_standardSV= (TextView) findViewById(R.id.text_standardSV);
+
+        TextView text_explainText= (TextView) findViewById(R.id.explainText);
+        TextView text_explainText1= (TextView) findViewById(R.id.explainText1);
+        if(Integer.parseInt(Static_setting.Age)<25){
+            text_standardHR.setText("70~73");
+            if(49<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=55){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(56<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=61){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(62<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=65){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(66<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=69){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(70<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=73){
+                    text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(74<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=81){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(82<=Static_setting.AVG_HR){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+        }
+        if(25<=Integer.parseInt(Static_setting.Age)&&Integer.parseInt(Static_setting.Age)<35){
+            text_standardHR.setText("71~74");
+            if(49<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=54){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(55<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=61){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(62<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=65){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(66<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=70){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(71<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=74){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(75<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=81){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(82<=Static_setting.AVG_HR){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+        }
+        if(35<=Integer.parseInt(Static_setting.Age)&&Integer.parseInt(Static_setting.Age)<45){
+            text_standardHR.setText("71~75");
+            if(50<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=56){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(57<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=62){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(63<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=66){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(67<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=70){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(71<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=75){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(76<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=82){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(83<=Static_setting.AVG_HR){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+        }
+        if(45<=Integer.parseInt(Static_setting.Age)&&Integer.parseInt(Static_setting.Age)<55){
+            text_standardHR.setText("72~76");
+            if(50<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=57){
+                text_explainText.setText("유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(58<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=63){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(64<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=67){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(68<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=71){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(72<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=76){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(77<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=83){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(84<=Static_setting.AVG_HR){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+            else
+            {
+                    text_explainText.setText("범위 밖에 값");
+            }
+        }
+        if(55<=Integer.parseInt(Static_setting.Age)&&Integer.parseInt(Static_setting.Age)<65){
+            text_standardHR.setText("72~75");
+            if(51<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=56){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(57<=Static_setting.AVG_HR&&Static_setting.AVG_HR
+                    <=61){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(62<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=67){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(68<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=71){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(72<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=75){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(76<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=81){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(82<=Static_setting.AVG_HR){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+            else
+            {
+                text_explainText.setText("범위 밖에 값");
+            }
+        }
+        if(65<=Static_setting.AVG_HR){
+            if(50<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=55){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 운동선수급입니다.");
+            }
+            if(56<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=61){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 매우좋음입니다.");
+            }
+            if(62<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=65){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 좋음입니다.");
+            }
+            if(66<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=69){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 평균이상입니다.");
+            }
+            if(70<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=73){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균입니다.");
+            }
+            if(74<=Static_setting.AVG_HR&&Static_setting.AVG_HR<=79){
+                text_explainText.setText(
+
+                        "유재범님의 현재 심박수는 평균이하입니다.");
+            }
+            if(80<=Static_setting.AVG_HR){
+                text_explainText.setText(
+                        "유재범님의 현재 심박수는 나쁨입니다.");
+            }
+            else
+            {
+                text_explainText.setText("범위 밖에 값");
+            }
+            text_standardHR.setText("70~73");
+        }
+
+        if(50<=Integer.parseInt(Static_setting.Age)){
+            if(Static_setting.AVG_RR<=11) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 저호흡수 상태입니다.\n"+
+                        "약물 과다 복용, 폐쇄성 수면 무호흡증, 두부 손상 등이 원인이 될 수 있습니다."
+                );
+            }
+            if(12<=Static_setting.AVG_RR&&Static_setting.AVG_RR<=30) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 ___로 정상입니다.\n"
+                        );
+            }
+            if(28<=Static_setting.AVG_RR) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 고호흡수 상태입니다.\n" +
+                        "불안, 발열, 호흡기 질환, 심장문제, 탈수 등이 원인이 될 수 있습니다.\n"
+                        );
+            }
+            text_standardRR.setText("분당 12-18 회 호흡");
+
+        }
+        if(Integer.parseInt(Static_setting.Age)<50)
+        {
+            if(Static_setting.AVG_RR<=11) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 저호흡수 상태입니다.\n"+
+                        "약물 과다 복용, 폐쇄성 수면 무호흡증, 두부 손상 등이 원인이 될 수 있습니다."
+                );
+            }
+            if(12<=Static_setting.AVG_RR&&Static_setting.AVG_RR<=20) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 ___로 정상입니다.\n"
+                );
+            }
+            if(21<=Static_setting.AVG_RR) {
+                text_explainText1.setText(
+                        "유재범님의 현재 호흡수는 고호흡수 상태입니다.\n" +
+                        "\n" +
+                        "불안, 발열, 호흡기 질환, 심장문제, 탈수 등이 원인이 될 수 있습니다.\n"
+                );
+            }
+            text_standardRR.setText("분당 12-28 회 호흡. ");
+        }
+
+        text_standardSV.setText("70~80ml");
+
+    }
+
 
     public void insertAVGdata()
     {
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(this.getClass().getName(), "트라이문out");
-                try {
+        if(Static_setting.Status.contains("Ward")) {
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.e(this.getClass().getName(), "트라이문out");
+                    try {
 
-                    Log.e(this.getClass().getName(), "try in!");
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    Log.e(this.getClass().getName(), "success!" + success);
+                        Log.e(this.getClass().getName(), "try in!");
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+                        Log.e(this.getClass().getName(), "success!" + success);
 
-                    if (success) {
-                        Log.e(this.getClass().getName(), "성공함!");
-                        Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
-                    } else {
-                        Log.e(this.getClass().getName(), "Dataset fail");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UserSettingActivity.this);
-                        builder.setMessage("Dataset fail")
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
+                        if (success) {
+                            Log.e(this.getClass().getName(), "성공함!");
+                            Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
+                        } else {
+                            Log.e(this.getClass().getName(), "Dataset fail");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(UserSettingActivity.this);
+                            builder.setMessage("Dataset fail")
+                                    .setNegativeButton("확인", null)
+                                    .create()
+                                    .show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        };
+            };
 
-        insertAVGdataReqest insertAVGdataReqest = new insertAVGdataReqest( Static_setting.ID,String.valueOf(Static_setting.AVG_HR),String.valueOf(Static_setting.AVG_RR),String.valueOf(Static_setting.AVG_SV),String.valueOf(Static_setting.AVG_HRV),responseListener);
-        RequestQueue queue = Volley.newRequestQueue(UserSettingActivity.this);
-        queue.add(insertAVGdataReqest);
+            insertAVGdataReqest insertAVGdataReqest = new insertAVGdataReqest(Static_setting.ID, String.valueOf(Static_setting.AVG_HR), String.valueOf(Static_setting.AVG_RR), String.valueOf(Static_setting.AVG_SV), String.valueOf(Static_setting.AVG_HRV), responseListener);
+            RequestQueue queue = Volley.newRequestQueue(UserSettingActivity.this);
+            queue.add(insertAVGdataReqest);
+        }
+
     }
 
     public void SimpleThread()
@@ -155,12 +438,7 @@ public class UserSettingActivity extends AppCompatActivity
 
                 for (i = 0; i < count; i++) {
                     StartAVG();
-                    if(hr0>30)
-                    {
-                        thread.interrupted();
-                        hr0=0;
 
-                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -188,71 +466,134 @@ public class UserSettingActivity extends AppCompatActivity
         calendar.add(Calendar.SECOND,-1);
 
         final String time=df.format(calendar.getTime());
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(this.getClass().getName(), "트라이문out");
-                try {
 
-                    Log.e(this.getClass().getName(), "try in!");
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    Log.e(this.getClass().getName(), "success!" + success);
-                    Log.e(this.getClass().getName(), "time "+ time);
-                    if (success) {
-                        Log.e(this.getClass().getName(), "성공함!");
-                        Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
-                        health_info.setTime(jsonResponse.getString("Time"));
-                        health_info.setHR(jsonResponse.getString("HR"));
-                        health_info.setRR(jsonResponse.getString("RR"));
-                        health_info.setSV(jsonResponse.getString("SV"));
-                        health_info.setHRV(jsonResponse.getString("HRV"));
-                        health_info.setSignal_Strength(jsonResponse.getString("Signal_Strength"));
-                        health_info.setStatus(jsonResponse.getString("Status"));
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getTime());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getHR());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getRR());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+health_info.getSV());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getHRV());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getSignal_Strength());
-                        Log.e(this.getClass().getName(), "디비에 가져온값은 "+ health_info.getStatus());
+        if(Static_setting.Status.contains("Ward")) {
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.e(this.getClass().getName(), "트라이문out");
+                    try {
 
-                        if(health_info.getHR()==0)
-                        {
-                            Log.e(this.getClass().getName(), "0이야");
+                        Log.e(this.getClass().getName(), "try in!");
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+                        Log.e(this.getClass().getName(), "success!" + success);
+                        Log.e(this.getClass().getName(), "time " + time);
+                        if (success) {
+                            Log.e(this.getClass().getName(), "성공함!");
+                            Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
+                            health_info.setTime(jsonResponse.getString("Time"));
+                            health_info.setHR(jsonResponse.getString("HR"));
+                            health_info.setRR(jsonResponse.getString("RR"));
+                            health_info.setSV(jsonResponse.getString("SV"));
+                            health_info.setHRV(jsonResponse.getString("HRV"));
+                            health_info.setSignal_Strength(jsonResponse.getString("Signal_Strength"));
+                            health_info.setStatus(jsonResponse.getString("Status"));
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getTime());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHR());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getRR());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSV());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHRV());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSignal_Strength());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getStatus());
+
+                            if (health_info.getHR() == 0) {
+                                Log.e(this.getClass().getName(), "0이야");
+                                count++;
+                                hr0++;
+                                Log.e(this.getClass().getName(), "현재 i값 감소 " + i);
+                            } else {
+                                Static_setting.sumHR += health_info.getHR();
+                                Static_setting.sumRR += health_info.getRR();
+                                Static_setting.sumSV += health_info.getSV();
+                                Static_setting.sumHRV += health_info.getHRV();
+                                Log.e(this.getClass().getName(), "현재 i값 " + i);
+                                Log.e(this.getClass().getName(), "Static_setting.sumHR " + Static_setting.sumHR);
+                                Log.e(this.getClass().getName(), "Static_setting.sumRR " + Static_setting.sumRR);
+                                Log.e(this.getClass().getName(), "Static_setting.sumSV " + Static_setting.sumSV);
+                                Log.e(this.getClass().getName(), "Static_setting.sumHRV " + Static_setting.sumHRV);
+
+                            }
+                        } else {
                             count++;
                             hr0++;
-                            Log.e(this.getClass().getName(), "현재 i값 감소 "+i);
-                        }
-
-                        else {
-                            Static_setting.sumHR += health_info.getHR();
-                            Static_setting.sumRR += health_info.getRR();
-                            Static_setting.sumSV += health_info.getSV();
-                            Static_setting.sumHRV += health_info.getHRV();
-                            Log.e(this.getClass().getName(), "현재 i값 "+i);
-                            Log.e(this.getClass().getName(), "Static_setting.sumHR "+ Static_setting.sumHR);
-                            Log.e(this.getClass().getName(), "Static_setting.sumRR "+ Static_setting.sumRR);
-                            Log.e(this.getClass().getName(), "Static_setting.sumSV "+ Static_setting.sumSV);
-                            Log.e(this.getClass().getName(), "Static_setting.sumHRV "+ Static_setting.sumHRV);
 
                         }
-                    } else {
-                        count++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            Log.e(this.getClass().getName(), "확인 건너뜀");
+            DataAVGRequest dataAVGRequest = new DataAVGRequest(Static_setting.ID, time, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(UserSettingActivity.this);
+            queue.add(dataAVGRequest);
+        }
+
+        if(Static_setting.Status.contains("Guardian")) {
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.e(this.getClass().getName(), "트라이문out");
+                    try {
+
+                        Log.e(this.getClass().getName(), "try in!");
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+                        Log.e(this.getClass().getName(), "success!" + success);
+                        Log.e(this.getClass().getName(), "time " + time);
+                        if (success) {
+                            Log.e(this.getClass().getName(), "성공함!");
+                            Log.e(this.getClass().getName(), "jsonResponse!" + jsonResponse);
+                            health_info.setTime(jsonResponse.getString("Time"));
+                            health_info.setHR(jsonResponse.getString("HR"));
+                            health_info.setRR(jsonResponse.getString("RR"));
+                            health_info.setSV(jsonResponse.getString("SV"));
+                            health_info.setHRV(jsonResponse.getString("HRV"));
+                            health_info.setSignal_Strength(jsonResponse.getString("Signal_Strength"));
+                            health_info.setStatus(jsonResponse.getString("Status"));
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getTime());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHR());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getRR());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSV());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHRV());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSignal_Strength());
+                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getStatus());
+
+                            if (health_info.getHR() == 0) {
+                                Log.e(this.getClass().getName(), "0이야");
+                                count++;
+                                hr0++;
+                                Log.e(this.getClass().getName(), "현재 i값 감소 " + i);
+                            } else {
+                                Static_setting.sumHR += health_info.getHR();
+                                Static_setting.sumRR += health_info.getRR();
+                                Static_setting.sumSV += health_info.getSV();
+                                Static_setting.sumHRV += health_info.getHRV();
+                                Log.e(this.getClass().getName(), "현재 i값 " + i);
+                                Log.e(this.getClass().getName(), "Static_setting.sumHR " + Static_setting.sumHR);
+                                Log.e(this.getClass().getName(), "Static_setting.sumRR " + Static_setting.sumRR);
+                                Log.e(this.getClass().getName(), "Static_setting.sumSV " + Static_setting.sumSV);
+                                Log.e(this.getClass().getName(), "Static_setting.sumHRV " + Static_setting.sumHRV);
+
+                            }
+                        } else {
+                            count++;
                             hr0++;
 
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        };
+            };
 
-        Log.e(this.getClass().getName(), "확인 건너뜀");
-        DataAVGRequest dataAVGRequest = new DataAVGRequest( Static_setting.ID,time,responseListener);
-        RequestQueue queue = Volley.newRequestQueue(UserSettingActivity.this);
-        queue.add(dataAVGRequest);
-
+            Log.e(this.getClass().getName(), "확인 건너뜀");
+            DataAVGRequest dataAVGRequest = new DataAVGRequest(Static_setting.Protected_ID, time, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(UserSettingActivity.this);
+            queue.add(dataAVGRequest);
+        }
 
     }
 
@@ -316,7 +657,7 @@ public class UserSettingActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < 60; i++) {
                     asyncDialog.setProgress(i * 2);
                     if(hr0>30)
                     {
