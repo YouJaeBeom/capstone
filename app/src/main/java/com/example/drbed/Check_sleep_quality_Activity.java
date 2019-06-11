@@ -227,68 +227,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
-
         String getTime=df.format(calendar.getTime());
-
-        Calendar calendar1=Calendar.getInstance();
-        calendar1.add(Calendar.DATE,-1);
-
-
-        String getTime1=df.format(calendar1.getTime());
-        Log.e(this.getClass().getName(), "getTime1!" + getTime1);
-        Calendar calendar2=Calendar.getInstance();
-
-        calendar2.add(Calendar.DATE,-2);
-        String getTime2=df.format(calendar2.getTime());
-
-        Calendar calendar3=Calendar.getInstance();
-
-        calendar3.add(Calendar.DATE,-3);
-        String getTime3=df.format(calendar3.getTime());
-
-        Calendar calendar4=Calendar.getInstance();
-
-        calendar4.add(Calendar.DATE,-4);
-        String getTime4=df.format(calendar4.getTime());
-
-        Calendar calendar5=Calendar.getInstance();
-
-        calendar5.add(Calendar.DATE,-5);
-        String getTime5=df.format(calendar5.getTime());
-
-        Calendar calendar6=Calendar.getInstance();
-
-        calendar6.add(Calendar.DATE,-6);
-        String getTime6=df.format(calendar6.getTime());
-        //String start_time=Check_sleep_start_Time(getTime);
-        Log.e(this.getClass().getName(), "getTime!" + getTime);
-        Log.e(this.getClass().getName(), "getTime1!" + getTime1);
-        Log.e(this.getClass().getName(), "getTime2!" + getTime2);
-        Log.e(this.getClass().getName(), "getTime3!" + getTime3);
-        Log.e(this.getClass().getName(), "getTime4!" + getTime4);
-        Log.e(this.getClass().getName(), "getTime5!" + getTime5);
-        Log.e(this.getClass().getName(), "getTime6!" + getTime6);
-
 
         if(Static_setting.Status.contains("Guardian"))
         {
               Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
-              Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
-            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
-            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
-            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
-            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
-            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
         }
         else if(Static_setting.Status.contains("Ward"))
         {
              Check_sleep_start_Time0(Static_setting.ID,getTime);
-            Check_sleep_start_Time1(Static_setting.ID,getTime1);
-            Check_sleep_start_Time2(Static_setting.ID,getTime2);
-            Check_sleep_start_Time3(Static_setting.ID,getTime3);
-            Check_sleep_start_Time4(Static_setting.ID,getTime4);
-            Check_sleep_start_Time5(Static_setting.ID,getTime5);
-            Check_sleep_start_Time6(Static_setting.ID,getTime6);
         }
 
 
@@ -401,7 +348,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "000000000000000000000000000000000000000000000000000000000 취침시간이 판단안됨");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-1);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
 
                     }
                 } catch (Exception e) {
@@ -446,9 +408,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         stop_time0 =jsonResponse.getString("Time");
                         Status10 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
-
-                        startSleepQulity0();
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-1);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                              Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                             Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
 
 
                     } else {
@@ -478,43 +453,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
     }
 
-    private void startSleepQulity0() {
-        Log.e(this.getClass().getName(), "000000000000000000000000000000000000000000000000000000000");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time0);
-        Log.e(this.getClass().getName(), "Start_time"+start_time0);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-            new BackgroundTask0().execute(Static_setting.Protected_ID,start_time0,stop_time0);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-            new BackgroundTask0().execute(Static_setting.ID,start_time0,stop_time0);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
-
-    }
 
     public void Check_sleep_start_Time1(final String ID, final String Time) {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -625,7 +563,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                     } else {
 
                         Log.e(this.getClass().getName(), "111111111111111111111111111111111111111111111111111 시작시점 못찾음");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-2);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -671,7 +624,34 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status11 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity1();
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-2);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
+                            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.ID,getTime);
+                            Check_sleep_start_Time2(Static_setting.ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.ID,getTime6);
+                        }
 
 
 
@@ -700,45 +680,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
     }
 
-    private void startSleepQulity1() {
-        Log.e(this.getClass().getName(), "111111111111111111111111111111111111111111111111111");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time1);
-        Log.e(this.getClass().getName(), "Start_time"+start_time1);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask1().execute(Static_setting.Protected_ID,start_time1,stop_time1);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask1().execute(Static_setting.ID,start_time1,stop_time1);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
-
-    }
 
     public void Check_sleep_start_Time2(final String ID, final String Time) {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -850,7 +791,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "22222222222222222222222222222222222222 시작점을아예찾지못함");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-3);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -895,7 +851,34 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status12 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity2();
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-3);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
+                            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.ID,getTime);
+                            Check_sleep_start_Time3(Static_setting.ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.ID,getTime6);
+                        }
 
 
 
@@ -924,45 +907,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
     }
 
-    private void startSleepQulity2() {
-        Log.e(this.getClass().getName(), "22222222222222222222222222222222222222");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time2);
-        Log.e(this.getClass().getName(), "Start_time"+start_time2);
-
-
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask2().execute(Static_setting.Protected_ID,start_time2,stop_time2);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask2().execute(Static_setting.ID,start_time2,stop_time2);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
-//
-    }
 
     public void Check_sleep_start_Time3(final String ID, final String Time) {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -1076,7 +1020,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "33333333333333333333333333333333333 시작점을 못찾음");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-4);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1121,7 +1080,34 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status13 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity3();
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-4);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
+                            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.ID,getTime);
+                            Check_sleep_start_Time4(Static_setting.ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.ID,getTime6);
+                        }
 
 
 
@@ -1148,46 +1134,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
         Sleep_stop_Time_Request sleep_stop_time_request = new Sleep_stop_Time_Request(ID, Time,date1, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Check_sleep_quality_Activity.this);
         queue.add(sleep_stop_time_request);
-
-    }
-
-    private void startSleepQulity3() {
-        Log.e(this.getClass().getName(), "33333333333333333333333333333333333");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time3);
-        Log.e(this.getClass().getName(), "Start_time"+start_time3);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask3().execute(Static_setting.Protected_ID,start_time3,stop_time3);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask3().execute(Static_setting.ID,start_time3,stop_time3);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
 
     }
 
@@ -1300,7 +1246,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "4444444444444444444444444444444444444444444444444 시작점 못찾음");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-5);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
 
                     }
                 } catch (Exception e) {
@@ -1346,7 +1307,34 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status14 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity4();
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-5);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
+                            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.ID,getTime);
+                            Check_sleep_start_Time5(Static_setting.ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.ID,getTime6);
+                        }
 
 
 
@@ -1376,45 +1364,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
     }
 
-    private void startSleepQulity4() {
-        Log.e(this.getClass().getName(), "4444444444444444444444444444444444444444444444444 ");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time4);
-        Log.e(this.getClass().getName(), "Start_time"+start_time4);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask4().execute(Static_setting.Protected_ID,start_time4,stop_time4);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask4().execute(Static_setting.ID,start_time4,stop_time4);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
-
-    }
     public void Check_sleep_start_Time5(final String ID, final String Time) {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -1524,7 +1473,22 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "555555555555555555555555555555555555555 시작점 못찾음");
-
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-6);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.Protected_ID,getTime1);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            Check_sleep_start_Time1(Static_setting.ID,getTime1);
+                        }
 
                     }
                 } catch (Exception e) {
@@ -1570,7 +1534,34 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status15 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity5();
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(date);
+                        Calendar calendar1=Calendar.getInstance();
+                        calendar1.add(Calendar.DATE,-6);
+                        String getTime1=df.format(calendar1.getTime());
+                        if(Static_setting.Status.contains("Guardian"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.Protected_ID,getTime);
+                            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.Protected_ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.Protected_ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.Protected_ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.Protected_ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.Protected_ID,getTime6);
+                        }
+                        else if(Static_setting.Status.contains("Ward"))
+                        {
+                            //Check_sleep_start_Time0(Static_setting.ID,getTime);
+                            Check_sleep_start_Time6(Static_setting.ID,getTime1);
+//            Check_sleep_start_Time2(Static_setting.ID,getTime2);
+//            Check_sleep_start_Time3(Static_setting.ID,getTime3);
+//            Check_sleep_start_Time4(Static_setting.ID,getTime4);
+//            Check_sleep_start_Time5(Static_setting.ID,getTime5);
+//            Check_sleep_start_Time6(Static_setting.ID,getTime6);
+                        }
 
 
 
@@ -1596,46 +1587,6 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
         Sleep_stop_Time_Request sleep_stop_time_request = new Sleep_stop_Time_Request(ID, Time,date1, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Check_sleep_quality_Activity.this);
         queue.add(sleep_stop_time_request);
-
-    }
-
-    private void startSleepQulity5() {
-        Log.e(this.getClass().getName(), "555555555555555555555555555555555555555 ");
-        Log.e(this.getClass().getName(), "stop_time"+stop_time5);
-        Log.e(this.getClass().getName(), "Start_time"+start_time5);
-        if(Static_setting.Status.contains("Guardian"))
-        {
-
-            new BackgroundTask5().execute(Static_setting.Protected_ID,start_time5,stop_time5);
-        }
-        else if(Static_setting.Status.contains("Ward"))
-        {
-
-            new BackgroundTask5().execute(Static_setting.ID,start_time5,stop_time5);
-        }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
 
     }
     public void Check_sleep_start_Time6(final String ID, final String Time) {
@@ -1745,7 +1696,7 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
                     } else {
                         Log.e(this.getClass().getName(), "66666666666666666666666666666666666666666 시작점못찾음");
-                        startSleepQulity6();
+                        startSleepQulity();
 
                     }
                 } catch (Exception e) {
@@ -1791,13 +1742,13 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
                         Status16 =jsonResponse.getString("Status");
                         //Log.e(this.getClass().getName(), "Start_time"+start_time);
 
-                        startSleepQulity6();
+                        startSleepQulity();
 
 
 
                     } else {
                         Log.e(this.getClass().getName(), "66666666666666666666666666666666666666666 stop찾지못함");
-                        startSleepQulity6();
+                        startSleepQulity();
 
                     }
                 } catch (Exception e) {
@@ -1820,43 +1771,20 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
 
     }
 
-    private void startSleepQulity6() {
+    private void startSleepQulity() {
         Log.e(this.getClass().getName(), "66666666666666666666666666666666666666666");
         Log.e(this.getClass().getName(), "stop_time"+stop_time6);
         Log.e(this.getClass().getName(), "Start_time"+start_time6);
         if(Static_setting.Status.contains("Guardian"))
         {
-
-            new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            new BackgroundTask0().execute(Static_setting.Protected_ID,start_time0,stop_time0);
+            //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
         }
         else if(Static_setting.Status.contains("Ward"))
         {
-
-            new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
+            new BackgroundTask0().execute(Static_setting.Protected_ID,start_time0,stop_time0);
+            //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
         }
-//        TextView text_total_sleep= (TextView) findViewById(R.id.total_sleep);
-//        TextView text_sleep= (TextView) findViewById(R.id.sleep);
-//        TextView text_wake= (TextView) findViewById(R.id.wake);
-//
-//
-//
-//        SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        Date start_time1= null; ///9
-//        Date stop_time1=null;
-//        try {
-//            start_time1 = dateFormat.parse(start_time);
-//            stop_time1= dateFormat.parse(stop_time); //10
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        long duration = stop_time1.getTime()-start_time1.getTime();
-//        long min = duration/60000;
-//        int hour= (int) (min/60);
-//        int min1= (int) (min%60);
-//        String total_time=String.valueOf(min);
-//        text_total_sleep.setText(hour+"시간"+min1+"분");
-//        text_sleep.setText(start_time);
-//        text_wake.setText(stop_time);
 
     }
 
@@ -1962,9 +1890,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask1().execute(Static_setting.Protected_ID,start_time1,stop_time1);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask1().execute(Static_setting.Protected_ID,start_time1,stop_time1);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2046,9 +1980,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask2().execute(Static_setting.Protected_ID,start_time2,stop_time2);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask2().execute(Static_setting.Protected_ID,start_time2,stop_time2);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2131,9 +2071,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask3().execute(Static_setting.Protected_ID,start_time3,stop_time3);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask3().execute(Static_setting.Protected_ID,start_time3,stop_time3);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2215,9 +2161,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask4().execute(Static_setting.Protected_ID,start_time4,stop_time4);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask4().execute(Static_setting.Protected_ID,start_time4,stop_time4);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2299,9 +2251,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask5().execute(Static_setting.Protected_ID,start_time5,stop_time5);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask5().execute(Static_setting.Protected_ID,start_time5,stop_time5);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2383,9 +2341,15 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
+            if(Static_setting.Status.contains("Guardian"))
             {
-                startchart();
+                new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+                //new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+            }
+            else if(Static_setting.Status.contains("Ward"))
+            {
+                new BackgroundTask6().execute(Static_setting.Protected_ID,start_time6,stop_time6);
+                //new BackgroundTask6().execute(Static_setting.ID,start_time6,stop_time6);
             }
         }
     }
@@ -2467,10 +2431,9 @@ public class Check_sleep_quality_Activity extends AppCompatActivity
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(sleepStep_0.getTotalLength()!=0 && sleepStep_1.getTotalLength()!=0 && sleepStep_2.getTotalLength()!=0 && sleepStep_3.getTotalLength()!=0 && sleepStep_4.getTotalLength()!=0 && sleepStep_5.getTotalLength()!=0 && sleepStep_6.getTotalLength()!=0)
-            {
+
                 startchart();
-            }
+
 
         }
     }

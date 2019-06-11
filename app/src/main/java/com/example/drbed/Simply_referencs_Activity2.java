@@ -178,16 +178,11 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 try {
-
-
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
                     Log.e(this.getClass().getName(), "success!" + success);
-
                     if (success) {
-
                         Log.e(this.getClass().getName(), "Check_sleep_start_Time!" + jsonResponse);
                         ID2 =jsonResponse.getString("ID");
                         start_time =jsonResponse.getString("Time");
@@ -199,7 +194,6 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
                         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Calendar calendar=Calendar.getInstance();
                         calendar.add(Calendar.SECOND,-1);
-
                         String getTime=df.format(calendar.getTime());
                         if(Static_setting.Status.contains("Guardian"))
                         {
@@ -210,34 +204,25 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
                             Check_sleep_stop_Time(Static_setting.ID,getTime);
                         }
-
                     } else {
                         Log.e(this.getClass().getName(), "오늘날짜에 취침시간이 판단이 안됨 전날으로 넘어감");
                         Check_sleep_start_Time_before(ID,Time);
-
-
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar=Calendar.getInstance();
-
         calendar.setTime(date);
-
-
         String date1=df.format(calendar.getTime());
         Log.e(this.getClass().getName(), "Sleep_start_Time_Request @@@@@@@@@@ date1!" + date1);
         Sleep_start_Time_Request sleep_start_time_request = new Sleep_start_Time_Request(ID, Time,date1, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Simply_referencs_Activity2.this);
         queue.add(sleep_start_time_request);
-
     }
 
     private void Check_sleep_start_Time_before(String ID,String Time) {
@@ -280,11 +265,6 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
                         }
 
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Simply_referencs_Activity2.this);
-                        builder.setMessage("실패 시발")
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
 
 
                     }
@@ -384,6 +364,7 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
 
 
+
         SimpleDateFormat  dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date start_time1= null; ///9
         Date stop_time1=null;
@@ -407,10 +388,6 @@ public class Simply_referencs_Activity2 extends AppCompatActivity
 
     class BackgroundTask extends AsyncTask<String, Void, String> {
         String target;
-
-
-
-
         @Override
         protected void onPreExecute() {
             target = "http://dbwo4011.cafe24.com/DRbed/sleep_step_request.php";

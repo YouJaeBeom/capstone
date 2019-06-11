@@ -350,7 +350,7 @@ public class UserSettingActivity extends AppCompatActivity
             }
             if(12<=Static_setting.AVG_RR&&Static_setting.AVG_RR<=30) {
                 text_explainText1.setText(
-                        "유재범님의 현재 호흡수는 ___로 정상입니다.\n"
+                        "유재범님의 현재 호흡수는 정상입니다.\n"
                         );
             }
             if(28<=Static_setting.AVG_RR) {
@@ -372,7 +372,7 @@ public class UserSettingActivity extends AppCompatActivity
             }
             if(12<=Static_setting.AVG_RR&&Static_setting.AVG_RR<=20) {
                 text_explainText1.setText(
-                        "유재범님의 현재 호흡수는 ___로 정상입니다.\n"
+                        "유재범님의 현재 호흡수는 정상입니다.\n"
                 );
             }
             if(21<=Static_setting.AVG_RR) {
@@ -436,7 +436,8 @@ public class UserSettingActivity extends AppCompatActivity
             @Override
             public void run() {
 
-                for (i = 0; i < count; i++) {
+                for (i = 0; i < count
+                        ; i++) {
                     StartAVG();
 
                     try {
@@ -449,24 +450,18 @@ public class UserSettingActivity extends AppCompatActivity
             }
         });
         thread.start();
-
-
     }
 
 
 
     private void StartAVG() {
-
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         DateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar=Calendar.getInstance();
-
         calendar.setTime(date);
         calendar.add(Calendar.SECOND,-1);
-
         final String time=df.format(calendar.getTime());
-
         if(Static_setting.Status.contains("Ward")) {
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
@@ -489,14 +484,6 @@ public class UserSettingActivity extends AppCompatActivity
                             health_info.setHRV(jsonResponse.getString("HRV"));
                             health_info.setSignal_Strength(jsonResponse.getString("Signal_Strength"));
                             health_info.setStatus(jsonResponse.getString("Status"));
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getTime());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHR());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getRR());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSV());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getHRV());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getSignal_Strength());
-                            Log.e(this.getClass().getName(), "디비에 가져온값은 " + health_info.getStatus());
-
                             if (health_info.getHR() == 0) {
                                 Log.e(this.getClass().getName(), "0이야");
                                 count++;
@@ -512,7 +499,6 @@ public class UserSettingActivity extends AppCompatActivity
                                 Log.e(this.getClass().getName(), "Static_setting.sumRR " + Static_setting.sumRR);
                                 Log.e(this.getClass().getName(), "Static_setting.sumSV " + Static_setting.sumSV);
                                 Log.e(this.getClass().getName(), "Static_setting.sumHRV " + Static_setting.sumHRV);
-
                             }
                         } else {
                             count++;
